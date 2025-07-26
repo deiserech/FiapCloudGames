@@ -2,9 +2,9 @@
    
    namespace FiapCloudGames.Domain.Interfaces
    {
-       public interface IClienteRepository
+       public interface IUserRepository
        {
-           Cliente GetById(int id);
-           void Add(Cliente cliente);
+           User GetById(string id);
+           void Add(User user);
        }
    }   

@@ -1,7 +1,17 @@
-   public class User
-   {
-       public int Id { get; set; }
-       public string Name { get; set; }
-       public string Email { get; set; }
-       // Add other properties as needed
-   }
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FiapCloudGames.Domain\FiapCloudGames.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="3.4.2" />
+  </ItemGroup>
+
+</Project>

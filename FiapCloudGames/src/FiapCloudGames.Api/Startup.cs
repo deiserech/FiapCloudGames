@@ -22,8 +22,8 @@ namespace FiapCloudGames.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddScoped<IClienteRepository, ClienteRepository>();
-            services.AddScoped<ClienteService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<UserService>();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }
