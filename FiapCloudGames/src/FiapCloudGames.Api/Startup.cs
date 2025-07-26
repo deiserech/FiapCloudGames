@@ -22,10 +22,14 @@ namespace FiapCloudGames.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<UserService>();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+            services.AddSwaggerGen();
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<UserService>();  
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

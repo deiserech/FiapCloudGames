@@ -1,22 +1,30 @@
-using System.Collections.Generic;
-using System.Linq;
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace FiapCloudGames.Infrastructure.Data
 {
     public class UserRepository : IUserRepository
     {
-        private static readonly List<User> _users = new();
+        private readonly AppDbContext _context;
+
+        public UserRepository(AppDbContext context)
+        {
+            _context = context;
+        }
 
         public User GetById(string id)
         {
-            return _users.FirstOrDefault(c => c.Id == id);
+            if (int.TryParse(id, out int userId))
+                return _context.Users.Find(userId);
+            return null;
         }
 
         public void Add(User user)
         {
-            _users.Add(user);
+            _context.Users.Add(user);
+            _context.SaveChanges();
         }
     }
 }
