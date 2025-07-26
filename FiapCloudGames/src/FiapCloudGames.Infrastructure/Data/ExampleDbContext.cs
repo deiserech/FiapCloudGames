@@ -1,0 +1,1 @@
+       dotnet new console -n TC_NETT_Fase1
