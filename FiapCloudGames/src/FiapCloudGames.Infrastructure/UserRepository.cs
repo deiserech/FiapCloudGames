@@ -1,14 +1,15 @@
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Interfaces;
+using FiapCloudGames.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace FiapCloudGames.Infrastructure
 {
     public class UserRepository : IUserRepository
     {
-        private readonly DbContext _context;
+        private readonly AppDbContext _context;
 
-        public UserRepository(DbContext context)
+        public UserRepository(AppDbContext context)
         {
             _context = context;
         }

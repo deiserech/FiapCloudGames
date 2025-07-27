@@ -1,3 +1,5 @@
+using FiapCloudGames.Domain.Enums;
+
 namespace FiapCloudGames.Domain.Entities
 {
     public class User
@@ -5,6 +7,7 @@ namespace FiapCloudGames.Domain.Entities
         public int Id { get; set; }
         public required string Name { get; set; }
         public required string Email { get; set; }
+        public required UserRole Role { get; set; } = UserRole.Usuario;
         public string PasswordHash { get; set; } = string.Empty;
 
         public bool VerifyPassword(string password)

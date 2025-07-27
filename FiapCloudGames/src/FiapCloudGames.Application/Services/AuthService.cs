@@ -51,6 +51,7 @@ namespace FiapCloudGames.Application.Services
             {
                 Name = registerDto.Name,
                 Email = registerDto.Email,
+                Role = registerDto.Role
             };
 
             user.SetPassword(registerDto.Password);
@@ -71,7 +72,7 @@ namespace FiapCloudGames.Application.Services
         private string GenerateJwtToken(User user)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
-            var secretKey = jwtSettings["SecretKey"];
+            var secretKey = _configuration["JwtSettings:SecretKey"];
             var issuer = jwtSettings["Issuer"];
             var audience = jwtSettings["Audience"];
             var expiryInMinutes = int.Parse(jwtSettings["ExpiryInMinutes"] ?? "60");
