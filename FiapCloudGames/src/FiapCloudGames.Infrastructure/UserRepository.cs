@@ -1,30 +1,39 @@
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
-namespace FiapCloudGames.Infrastructure.Data
+namespace FiapCloudGames.Infrastructure
 {
     public class UserRepository : IUserRepository
     {
-        private readonly AppDbContext _context;
+        private readonly DbContext _context;
 
-        public UserRepository(AppDbContext context)
+        public UserRepository(DbContext context)
         {
             _context = context;
         }
 
-        public User GetById(string id)
+        public User? GetById(string id)
         {
             if (int.TryParse(id, out int userId))
-                return _context.Users.Find(userId);
+                return _context.Set<User>().Find(userId);
             return null;
+        }
+
+        public User? GetByEmail(string email)
+        {
+            return _context.Set<User>().FirstOrDefault(u => u.Email == email);
         }
 
         public void Add(User user)
         {
-            _context.Users.Add(user);
+            _context.Set<User>().Add(user);
             _context.SaveChanges();
+        }
+
+        public bool EmailExists(string email)
+        {
+            return _context.Set<User>().Any(u => u.Email == email);
         }
     }
 }
