@@ -1,3 +1,4 @@
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -9,15 +10,15 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FiapCloudGames.Application.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
 
         public AuthService(IUserRepository userRepository, IConfiguration configuration)
         {
-            _userRepository = userRepository;
-            _configuration = configuration;
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         public AuthResponseDto? Login(LoginDto loginDto)

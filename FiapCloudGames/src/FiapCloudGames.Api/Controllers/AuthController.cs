@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.DTOs;
+using FiapCloudGames.Domain.Interfaces;
+using FiapCloudGames.Domain.Utils;
+using System;
 
 namespace FiapCloudGames.Api.Controllers
 {
@@ -8,11 +11,11 @@ namespace FiapCloudGames.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
-        public AuthController(AuthService authService)
+        public AuthController(IAuthService authService)
         {
-            _authService = authService;
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
         }
 
         [HttpPost("login")]
@@ -20,6 +23,13 @@ namespace FiapCloudGames.Api.Controllers
         {
             if (!ModelState.IsValid)
             {
+                return BadRequest(ModelState);
+            }
+
+            // Validação adicional de formato de email
+            if (!ValidationHelper.IsValidEmail(loginDto.Email))
+            {
+                ModelState.AddModelError("Email", "Formato de e-mail inválido.");
                 return BadRequest(ModelState);
             }
 
@@ -38,6 +48,24 @@ namespace FiapCloudGames.Api.Controllers
         {
             if (!ModelState.IsValid)
             {
+                return BadRequest(ModelState);
+            }
+
+            // Validação adicional de formato de email
+            if (!ValidationHelper.IsValidEmail(registerDto.Email))
+            {
+                ModelState.AddModelError("Email", "Formato de e-mail inválido.");
+                return BadRequest(ModelState);
+            }
+
+            // Validação de senha segura
+            var passwordErrors = ValidationHelper.ValidatePassword(registerDto.Password);
+            if (passwordErrors.Any())
+            {
+                foreach (var error in passwordErrors)
+                {
+                    ModelState.AddModelError("Password", error);
+                }
                 return BadRequest(ModelState);
             }
 

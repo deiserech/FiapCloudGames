@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace FiapCloudGames.Application.Services
 {
-    public class GameService
+    public class GameService : IGameService
     {
         private readonly IGameRepository _repo;
 
         public GameService(IGameRepository repo)
         {
-            _repo = repo;
+            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
 
         public void Cadastrar(Game game) => _repo.Add(game);

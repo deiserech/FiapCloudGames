@@ -1,7 +1,9 @@
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.Entities;
+using FiapCloudGames.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace FiapCloudGames.Api.Controllers
 {
@@ -9,11 +11,11 @@ namespace FiapCloudGames.Api.Controllers
     [Route("api/[controller]")]
     public class GameController : ControllerBase
     {
-        private readonly GameService _service;
+        private readonly IGameService _service;
 
-        public GameController(GameService service)
+        public GameController(IGameService service)
         {
-            _service = service;
+            _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         /// <summary>
@@ -25,13 +27,16 @@ namespace FiapCloudGames.Api.Controllers
         /// <param name="game">Dados do jogo a ser cadastrado.</param>
         /// <returns>O jogo cadastrado.</returns>
         /// <response code="201">Jogo cadastrado com sucesso.</response>
-        /// <response code="400">Dados inválidos.</response>
+        /// <response code="400">Dados invï¿½lidos.</response>
         [HttpPost]
         [Authorize(Roles = "Administrador")]
         [ProducesResponseType(typeof(Game), 201)]
         [ProducesResponseType(400)]
         public IActionResult Cadastrar([FromBody] Game game)
         {
+            if (game == null)
+                return BadRequest("Game data is required");
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -40,12 +45,12 @@ namespace FiapCloudGames.Api.Controllers
         }
 
         /// <summary>
-        /// Obtém um jogo pelo ID.
+        /// Obtï¿½m um jogo pelo ID.
         /// </summary>
         /// <param name="id">ID do jogo.</param>
         /// <returns>O jogo encontrado.</returns>
         /// <response code="200">Jogo encontrado.</response>
-        /// <response code="404">Jogo não encontrado.</response>
+        /// <response code="404">Jogo nï¿½o encontrado.</response>
         [HttpGet("{id}")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(Game), 200)]

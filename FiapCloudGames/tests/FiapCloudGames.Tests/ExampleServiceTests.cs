@@ -1,1 +1,0 @@
-   dotnet new console -n ProjectName

@@ -9,7 +9,7 @@ namespace FiapCloudGames.Domain.Utils
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private static readonly Regex PasswordRegex = new Regex(
-            @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+            @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#+\-_.=])[A-Za-z\d@$!%*?&#+\-_.=]{8,}$",
             RegexOptions.Compiled);
 
         public static bool IsValidEmail(string email)
@@ -31,7 +31,7 @@ namespace FiapCloudGames.Domain.Utils
         public static string GetPasswordRequirements()
         {
             return "A senha deve ter no mínimo 8 caracteres, incluindo pelo menos: " +
-                   "uma letra minúscula, uma maiúscula, um número e um caractere especial (@$!%*?&).";
+                   "uma letra minúscula, uma maiúscula, um número e um caractere especial (@$!%*?&#+\\-_.=).";
         }
 
         public static List<string> ValidatePassword(string password)
@@ -56,8 +56,8 @@ namespace FiapCloudGames.Domain.Utils
             if (!password.Any(char.IsDigit))
                 errors.Add("A senha deve conter pelo menos um número.");
 
-            if (!password.Any(c => "@$!%*?&".Contains(c)))
-                errors.Add("A senha deve conter pelo menos um caractere especial (@$!%*?&).");
+            if (!password.Any(c => "@$!%*?&#+\\-_.=".Contains(c)))
+                errors.Add("A senha deve conter pelo menos um caractere especial (@$!%*?&#+\\-_.=).");
 
             return errors;
         }
