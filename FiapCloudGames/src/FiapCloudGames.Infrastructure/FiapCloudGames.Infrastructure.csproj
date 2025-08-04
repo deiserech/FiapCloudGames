@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\**" />
+    <EmbeddedResource Remove="src\**" />
+    <None Remove="src\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FiapCloudGames.Domain\FiapCloudGames.Domain.csproj" />
   </ItemGroup>
 

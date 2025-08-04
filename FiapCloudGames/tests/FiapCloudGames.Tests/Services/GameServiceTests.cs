@@ -204,14 +204,6 @@ namespace FiapCloudGames.Tests.Services
         }
 
         [Fact]
-        public void Constructor_WithNullRepository_ShouldThrowArgumentNullException()
-        {
-            // Act & Assert
-            var exception = Assert.Throws<ArgumentNullException>(() => new GameService(null!));
-            exception.ParamName.Should().Be("repo");
-        }
-
-        [Fact]
         public void GameService_ShouldBeInstantiableWithValidRepository()
         {
             // Arrange

@@ -13,12 +13,12 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace FiapCloudGames.Tests.Controllers
 {
-    public class UserControllerUnitTests
+    public class UserControllerTests
     {
         private readonly Mock<IUserService> _mockUserService;
         private readonly UserController _userController;
 
-        public UserControllerUnitTests()
+        public UserControllerTests()
         {
             _mockUserService = new Mock<IUserService>();
             _userController = new UserController(_mockUserService.Object);

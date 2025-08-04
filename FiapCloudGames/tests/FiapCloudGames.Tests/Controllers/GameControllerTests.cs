@@ -13,12 +13,12 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FiapCloudGames.Tests.Controllers
 {
-    public class GameControllerUnitTests
+    public class GameControllerTests
     {
         private readonly Mock<IGameService> _mockGameService;
         private readonly GameController _gameController;
 
-        public GameControllerUnitTests()
+        public GameControllerTests()
         {
             _mockGameService = new Mock<IGameService>();
             _gameController = new GameController(_mockGameService.Object);

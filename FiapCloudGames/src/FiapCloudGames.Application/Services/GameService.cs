@@ -10,7 +10,7 @@ namespace FiapCloudGames.Application.Services
 
         public GameService(IGameRepository repo)
         {
-            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
+            _repo = repo;
         }
 
         public void Cadastrar(Game game) => _repo.Add(game);

@@ -13,13 +13,13 @@ using System.Collections.Generic;
 
 namespace FiapCloudGames.Tests.Services
 {
-    public class AuthServiceUnitTests
+    public class AuthServiceTests
     {
         private readonly Mock<IUserRepository> _mockUserRepository;
         private readonly Mock<IConfiguration> _mockConfiguration;
         private readonly AuthService _authService;
 
-        public AuthServiceUnitTests()
+        public AuthServiceTests()
         {
             _mockUserRepository = new Mock<IUserRepository>();
             _mockConfiguration = new Mock<IConfiguration>();
@@ -51,24 +51,6 @@ namespace FiapCloudGames.Tests.Services
 
             // Assert
             service.Should().NotBeNull();
-        }
-
-        [Fact]
-        public void Constructor_WithNullUserRepository_ShouldThrowArgumentNullException()
-        {
-            // Arrange, Act & Assert
-            var exception = Assert.Throws<ArgumentNullException>(() => 
-                new AuthService(null!, _mockConfiguration.Object));
-            exception.ParamName.Should().Be("userRepository");
-        }
-
-        [Fact]
-        public void Constructor_WithNullConfiguration_ShouldThrowArgumentNullException()
-        {
-            // Arrange, Act & Assert
-            var exception = Assert.Throws<ArgumentNullException>(() => 
-                new AuthService(_mockUserRepository.Object, null!));
-            exception.ParamName.Should().Be("configuration");
         }
 
         #endregion

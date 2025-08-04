@@ -1,4 +1,3 @@
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,8 +16,8 @@ namespace FiapCloudGames.Application.Services
 
         public AuthService(IUserRepository userRepository, IConfiguration configuration)
         {
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _userRepository = userRepository;
+            _configuration = configuration;
         }
 
         public AuthResponseDto? Login(LoginDto loginDto)

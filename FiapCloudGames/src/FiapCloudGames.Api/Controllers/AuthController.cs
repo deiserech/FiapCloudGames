@@ -26,13 +26,6 @@ namespace FiapCloudGames.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Validação adicional de formato de email
-            if (!ValidationHelper.IsValidEmail(loginDto.Email))
-            {
-                ModelState.AddModelError("Email", "Formato de e-mail inválido.");
-                return BadRequest(ModelState);
-            }
-
             var result = _authService.Login(loginDto);
             
             if (result == null)
@@ -51,14 +44,6 @@ namespace FiapCloudGames.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Validação adicional de formato de email
-            if (!ValidationHelper.IsValidEmail(registerDto.Email))
-            {
-                ModelState.AddModelError("Email", "Formato de e-mail inválido.");
-                return BadRequest(ModelState);
-            }
-
-            // Validação de senha segura
             var passwordErrors = ValidationHelper.ValidatePassword(registerDto.Password);
             if (passwordErrors.Any())
             {

@@ -8,12 +8,12 @@ using FiapCloudGames.Domain.Enums;
 
 namespace FiapCloudGames.Tests.Services
 {
-    public class UserServiceUnitTests
+    public class UserServiceests
     {
         private readonly Mock<IUserRepository> _mockUserRepository;
         private readonly UserService _userService;
 
-        public UserServiceUnitTests()
+        public UserServiceests()
         {
             _mockUserRepository = new Mock<IUserRepository>();
             _userService = new UserService(_mockUserRepository.Object);
@@ -29,14 +29,6 @@ namespace FiapCloudGames.Tests.Services
 
             // Assert
             service.Should().NotBeNull();
-        }
-
-        [Fact]
-        public void Constructor_WithNullRepository_ShouldThrowArgumentNullException()
-        {
-            // Arrange, Act & Assert
-            var exception = Assert.Throws<ArgumentNullException>(() => new UserService(null!));
-            exception.ParamName.Should().Be("repo");
         }
 
         #endregion

@@ -10,7 +10,7 @@ namespace FiapCloudGames.Application.Services
 
         public UserService(IUserRepository repo)
         {
-            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
+            _repo = repo;
         }
 
         public User? ObterPorId(string id) => _repo.GetById(id);
