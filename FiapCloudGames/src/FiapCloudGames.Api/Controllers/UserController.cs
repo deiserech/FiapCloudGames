@@ -8,9 +8,13 @@ using System;
 
 namespace FiapCloudGames.Api.Controllers
 {
+    /// <summary>
+    /// Controller responsável pelo gerenciamento de usuários
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
+    [Produces("application/json")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _service;
@@ -21,15 +25,17 @@ namespace FiapCloudGames.Api.Controllers
         }
 
         /// <summary>
-        /// Obt�m um usu�rio pelo ID.
+        /// Obtém um usuário pelo ID
         /// </summary>
-        /// <param name="id">ID do usu�rio.</param>
-        /// <returns>Dados do usu�rio.</returns>
-        /// <response code="200">Usu�rio encontrado.</response>
-        /// <response code="404">Usu�rio n�o encontrado.</response>
+        /// <param name="id">ID do usuário</param>
+        /// <returns>Dados do usuário</returns>
+        /// <response code="200">Usuário encontrado</response>
+        /// <response code="404">Usuário não encontrado</response>
+        /// <response code="401">Não autorizado</response>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(object), 200)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetUser(string id)
         {
             var user = _service.ObterPorId(id);
@@ -45,16 +51,16 @@ namespace FiapCloudGames.Api.Controllers
         }
 
         /// <summary>
-        /// Obt�m o perfil do usu�rio autenticado.
+        /// Obtém o perfil do usuário autenticado
         /// </summary>
-        /// <returns>Dados do usu�rio autenticado.</returns>
-        /// <response code="200">Perfil encontrado.</response>
-        /// <response code="401">Usu�rio n�o autenticado.</response>
-        /// <response code="404">Usu�rio n�o encontrado.</response>
+        /// <returns>Dados do usuário autenticado</returns>
+        /// <response code="200">Perfil encontrado</response>
+        /// <response code="401">Usuário não autenticado</response>
+        /// <response code="404">Usuário não encontrado</response>
         [HttpGet("profile")]
-        [ProducesResponseType(typeof(object), 200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetProfile()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -73,14 +79,16 @@ namespace FiapCloudGames.Api.Controllers
         }
 
         /// <summary>
-        /// Cria um novo usu�rio.
+        /// Cria um novo usuário
         /// </summary>
-        /// <param name="user">Dados do usu�rio a ser criado.</param>
-        /// <returns>Usu�rio criado.</returns>
-        /// <response code="201">Usu�rio criado com sucesso.</response>
+        /// <param name="user">Dados do usuário a ser criado</param>
+        /// <returns>Usuário criado</returns>
+        /// <response code="201">Usuário criado com sucesso</response>
+        /// <response code="400">Dados inválidos</response>
         [HttpPost]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(object), 201)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult CriarUser([FromBody] User user)
         {
             if (user == null)

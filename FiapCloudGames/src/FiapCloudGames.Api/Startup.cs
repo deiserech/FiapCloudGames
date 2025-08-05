@@ -26,11 +26,22 @@ namespace FiapCloudGames.Api
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Title = "FIAP Cloud Games API",
+                    Version = "v1",
+                    Description = "API para gerenciamento de jogos, biblioteca de usuários e promoções",
+                    Contact = new Microsoft.OpenApi.Models.OpenApiContact
+                    {
+                        Name = "FIAP Cloud Games Team",
+                        Email = "support@fiapcloudgames.com"
+                    }
+                });
+
                 var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
 
-                // Adiciona o esquema de seguran�a JWT
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     Description = "Informe o token JWT no formato: Bearer {seu token}",
@@ -54,12 +65,6 @@ namespace FiapCloudGames.Api
                         new string[] {}
                     }
                 });
-            });
-            services.AddSwaggerGen(c =>
-            {
-                var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
             });
 
             services.AddDbContext<AppDbContext>(options =>
@@ -95,9 +100,13 @@ namespace FiapCloudGames.Api
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<IPromotionRepository, PromotionRepository>();
+            services.AddScoped<ILibraryRepository, LibraryRepository>();
             services.AddScoped<UserService>();
             services.AddScoped<GameService>();
             services.AddScoped<AuthService>();
+            services.AddScoped<IPromotionService, PromotionService>();
+            services.AddScoped<ILibraryService, LibraryService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -106,7 +115,13 @@ namespace FiapCloudGames.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "FIAP Cloud Games API v1");
+                    c.RoutePrefix = string.Empty; 
+                    c.DisplayRequestDuration();
+                    c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+                });
             }
 
             app.UseRouting();

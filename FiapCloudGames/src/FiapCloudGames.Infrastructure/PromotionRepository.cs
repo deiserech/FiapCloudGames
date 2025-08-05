@@ -1,0 +1,90 @@
+using Microsoft.EntityFrameworkCore;
+using FiapCloudGames.Domain.Entities;
+using FiapCloudGames.Domain.Interfaces;
+using FiapCloudGames.Infrastructure.Data;
+
+namespace FiapCloudGames.Infrastructure
+{
+    public class PromotionRepository : IPromotionRepository
+    {
+        private readonly AppDbContext _context;
+
+        public PromotionRepository(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Promotion>> GetAllAsync()
+        {
+            return await _context.Promotions
+                .Include(p => p.Game)
+                .ToListAsync();
+        }
+
+        public async Task<Promotion?> GetByIdAsync(int id)
+        {
+            return await _context.Promotions
+                .Include(p => p.Game)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task<IEnumerable<Promotion>> GetByGameIdAsync(int gameId)
+        {
+            return await _context.Promotions
+                .Include(p => p.Game)
+                .Where(p => p.GameId == gameId)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Promotion>> GetActivePromotionsAsync()
+        {
+            var now = DateTime.Now;
+            return await _context.Promotions
+                .Include(p => p.Game)
+                .Where(p => p.IsActive && p.StartDate <= now && p.EndDate >= now)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Promotion>> GetActivePromotionsByGameIdAsync(int gameId)
+        {
+            var now = DateTime.Now;
+            return await _context.Promotions
+                .Include(p => p.Game)
+                .Where(p => p.GameId == gameId && p.IsActive && p.StartDate <= now && p.EndDate >= now)
+                .ToListAsync();
+        }
+
+        public async Task<Promotion> CreateAsync(Promotion promotion)
+        {
+            _context.Promotions.Add(promotion);
+            await _context.SaveChangesAsync();
+            
+            // Retorna a promoção com o Game incluído
+            return await GetByIdAsync(promotion.Id) ?? promotion;
+        }
+
+        public async Task<Promotion> UpdateAsync(Promotion promotion)
+        {
+            _context.Entry(promotion).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            
+            // Retorna a promoção atualizada com o Game incluído
+            return await GetByIdAsync(promotion.Id) ?? promotion;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var promotion = await _context.Promotions.FindAsync(id);
+            if (promotion != null)
+            {
+                _context.Promotions.Remove(promotion);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<bool> ExistsAsync(int id)
+        {
+            return await _context.Promotions.AnyAsync(p => p.Id == id);
+        }
+    }
+}
