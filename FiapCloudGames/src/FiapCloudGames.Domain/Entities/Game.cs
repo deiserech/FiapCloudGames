@@ -16,13 +16,8 @@ namespace FiapCloudGames.Domain.Entities
         [Range(0.01, 1000.00)]
         public decimal Price { get; set; }
 
-        [DataType(DataType.Date)]
-        public DateTime ReleaseDate { get; set; }
-
-        // Navigation Property para Promotions
         public ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();
 
-        // Navigation Property para Library
         public ICollection<Library> LibraryEntries { get; set; } = new List<Library>();
     }
 }

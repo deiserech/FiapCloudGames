@@ -36,7 +36,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Id = 123,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockUserService.Setup(s => s.GetByIdAsync(userId)).Returns(expectedUser);
@@ -113,7 +113,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Id = 456,
                 Name = "Admin User",
                 Email = "admin@example.com",
-                Role = UserRole.Administrador
+                Role = UserRole.Admin
             };
 
             _mockUserService.Setup(s => s.GetByIdAsync(userId)).Returns(adminUser);
@@ -157,7 +157,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Id = 123,
                 Name = "Authenticated User",
                 Email = "auth@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             // Setup claims para simular usuário autenticado
@@ -324,7 +324,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Id = 1,
                 Name = "New User",
                 Email = "newuser@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<User>())).Verifiable();
@@ -366,7 +366,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Id = 2,
                 Name = "Admin User",
                 Email = "admin@example.com",
-                Role = UserRole.Administrador
+                Role = UserRole.Admin
             };
 
             _mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<User>())).Verifiable();
@@ -411,7 +411,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Id = 1,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<User>()))
@@ -541,7 +541,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Id = 123,
                 Name = "Multi Claim User",
                 Email = "multi@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             var claims = new List<Claim>
@@ -581,7 +581,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Id = 999,
                 Name = "José da Silva Ñoño",
                 Email = "josé.ñoño@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<User>())).Verifiable();
@@ -613,7 +613,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Id = 123,
                 Name = "Secure User",
                 Email = "secure@example.com",
-                Role = UserRole.Usuario,
+                Role = UserRole.User,
                 PasswordHash = "super-secret-hash"
             };
 
@@ -643,7 +643,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Id = 123,
                 Name = "Secure Profile User",
                 Email = "profile@example.com",
-                Role = UserRole.Administrador,
+                Role = UserRole.Admin,
                 PasswordHash = "another-secret-hash"
             };
 

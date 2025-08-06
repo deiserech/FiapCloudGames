@@ -26,7 +26,5 @@ namespace FiapCloudGames.Domain.DTOs
         public bool IsActive { get; set; } = true;
 
         public int GameId { get; set; }
-
-        public string? GameTitle { get; set; }
     }
 }

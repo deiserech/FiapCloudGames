@@ -7,10 +7,8 @@ namespace FiapCloudGames.Domain.Entities
         public int Id { get; set; }
         public required string Name { get; set; }
         public required string Email { get; set; }
-        public required UserRole Role { get; set; } = UserRole.Usuario;
+        public required UserRole Role { get; set; } = UserRole.User;
         public string PasswordHash { get; set; } = string.Empty;
-
-        // Navigation Property para Library
         public ICollection<Library> LibraryGames { get; set; } = new List<Library>();
 
         public bool VerifyPassword(string password)

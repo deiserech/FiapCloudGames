@@ -27,10 +27,8 @@ namespace FiapCloudGames.Domain.Entities
 
         public bool IsActive { get; set; } = true;
 
-        // Foreign Key para Game
         public int GameId { get; set; }
 
-        // Navigation Property
         public Game Game { get; set; } = null!;
 
         public bool IsValidPromotion()

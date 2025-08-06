@@ -221,7 +221,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Name = "New User",
                 Email = "newuser@example.com",
                 Password = "ValidPassword123!",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             var expectedResponse = new AuthResponseDto
@@ -254,7 +254,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Name = "New User",
                 Email = "existing@example.com",
                 Password = "ValidPassword123!",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockAuthService.Setup(s => s.Register(registerDto)).Returns((AuthResponseDto?)null);
@@ -279,7 +279,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Name = "",
                 Email = "test@example.com",
                 Password = "ValidPassword123!",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _authController.ModelState.AddModelError("Name", "Name is required");
@@ -304,7 +304,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Name = "Test User",
                 Email = "invalid-email-format",
                 Password = "ValidPassword123!",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             // Act
@@ -337,7 +337,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Name = "Test User",
                 Email = "test@example.com",
                 Password = weakPassword,
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             // Act
@@ -366,7 +366,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Name = "Test User",
                 Email = "test@example.com",
                 Password = strongPassword,
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockAuthService.Setup(s => s.Register(registerDto)).Returns((AuthResponseDto?)null);
@@ -387,7 +387,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Name = "Admin User",
                 Email = "admin@example.com",
                 Password = "AdminPassword123!",
-                Role = UserRole.Administrador
+                Role = UserRole.Admin
             };
 
             var expectedResponse = new AuthResponseDto
@@ -420,7 +420,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Name = "Test User",
                 Email = "test@example.com",
                 Password = "ValidPassword123!",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockAuthService.Setup(s => s.Register(registerDto))
@@ -519,7 +519,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Name = "José María Ñoño-González",
                 Email = "jose@example.com",
                 Password = "ValidPassword123!",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             var expectedResponse = new AuthResponseDto
@@ -591,7 +591,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Name = "Test User",
                 Email = "test@example.com",
                 Password = "",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             // Act

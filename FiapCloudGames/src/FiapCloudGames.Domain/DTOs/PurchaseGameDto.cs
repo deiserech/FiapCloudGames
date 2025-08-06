@@ -13,10 +13,5 @@ namespace FiapCloudGames.Domain.DTOs
         [Required]
         [Range(0.01, 1000.00)]
         public decimal PurchasePrice { get; set; }
-
-        public bool IsGift { get; set; } = false;
-
-        [StringLength(500)]
-        public string? GiftMessage { get; set; }
     }
 }

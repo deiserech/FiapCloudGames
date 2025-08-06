@@ -45,7 +45,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 123,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario,
+                Role = UserRole.User,
                 PasswordHash = "hashedpassword"
             };
 
@@ -125,7 +125,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 456,
                 Name = "Admin User",
                 Email = "admin@example.com",
-                Role = UserRole.Administrador,
+                Role = UserRole.Admin,
                 PasswordHash = "adminhashedpassword"
             };
 
@@ -136,7 +136,7 @@ namespace FiapCloudGames.Tests.Services
 
             // Assert
             result.Should().NotBeNull();
-            result!.Role.Should().Be(UserRole.Administrador);
+            result!.Role.Should().Be(UserRole.Admin);
             _mockUserRepository.Verify(repo => repo.GetById(userId), Times.Once);
         }
 
@@ -164,7 +164,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 789,
                 Name = "José da Silva Ñoño",
                 Email = "josé.ñoño@example.com",
-                Role = UserRole.Usuario,
+                Role = UserRole.User,
                 PasswordHash = "specialhashedpassword"
             };
 
@@ -190,7 +190,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 123,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns(user);
@@ -220,7 +220,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 1,
                 Name = "New User",
                 Email = "newuser@example.com",
-                Role = UserRole.Usuario,
+                Role = UserRole.User,
                 PasswordHash = "hashedpassword"
             };
 
@@ -255,7 +255,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 2,
                 Name = "Admin User",
                 Email = "admin@example.com",
-                Role = UserRole.Administrador,
+                Role = UserRole.Admin,
                 PasswordHash = "adminhashedpassword"
             };
 
@@ -277,7 +277,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 3,
                 Name = "François Müller",
                 Email = "françois.müller@example.com",
-                Role = UserRole.Usuario,
+                Role = UserRole.User,
                 PasswordHash = "specialhashedpassword"
             };
 
@@ -299,7 +299,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 4,
                 Name = new string('A', 100),
                 Email = $"{new string('b', 50)}@{new string('c', 50)}.com",
-                Role = UserRole.Usuario,
+                Role = UserRole.User,
                 PasswordHash = new string('x', 500)
             };
 
@@ -321,7 +321,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 5,
                 Name = "",
                 Email = "",
-                Role = UserRole.Usuario,
+                Role = UserRole.User,
                 PasswordHash = ""
             };
 
@@ -343,7 +343,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 6,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario,
+                Role = UserRole.User,
                 PasswordHash = "hashedpassword"
             };
 
@@ -365,7 +365,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 7,
                 Name = "Test User",
                 Email = "invalid-email",
-                Role = UserRole.Usuario,
+                Role = UserRole.User,
                 PasswordHash = "hashedpassword"
             };
 
@@ -382,9 +382,9 @@ namespace FiapCloudGames.Tests.Services
         public void Criar_CalledMultipleTimes_ShouldCallRepositoryEachTime()
         {
             // Arrange
-            var user1 = new User { Id = 1, Name = "User 1", Email = "user1@example.com", Role = UserRole.Usuario };
-            var user2 = new User { Id = 2, Name = "User 2", Email = "user2@example.com", Role = UserRole.Usuario };
-            var user3 = new User { Id = 3, Name = "User 3", Email = "user3@example.com", Role = UserRole.Administrador };
+            var user1 = new User { Id = 1, Name = "User 1", Email = "user1@example.com", Role = UserRole.User };
+            var user2 = new User { Id = 2, Name = "User 2", Email = "user2@example.com", Role = UserRole.User };
+            var user3 = new User { Id = 3, Name = "User 3", Email = "user3@example.com", Role = UserRole.Admin };
 
             _mockUserRepository.Setup(repo => repo.Add(It.IsAny<User>())).Verifiable();
 
@@ -409,7 +409,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 1,
                 Name = "Repeated User",
                 Email = "repeated@example.com",
-                Role = UserRole.Usuario,
+                Role = UserRole.User,
                 PasswordHash = "hashedpassword"
             };
 
@@ -459,7 +459,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 12345,
                 Name = "Complex User With Many Properties",
                 Email = "complex.user+tag@subdomain.example.com",
-                Role = UserRole.Administrador,
+                Role = UserRole.Admin,
                 PasswordHash = "very-long-complex-hashed-password-with-special-characters-!@#$%^&*()"
             };
 
@@ -481,8 +481,8 @@ namespace FiapCloudGames.Tests.Services
         }
 
         [Theory]
-        [InlineData(UserRole.Usuario)]
-        [InlineData(UserRole.Administrador)]
+        [InlineData(UserRole.User)]
+        [InlineData(UserRole.Admin)]
         public void UserService_ShouldHandleAllUserRoles(UserRole role)
         {
             // Arrange
@@ -508,8 +508,8 @@ namespace FiapCloudGames.Tests.Services
         public void UserService_WithDifferentUserIds_ShouldRetrieveCorrectUsers()
         {
             // Arrange
-            var user1 = new User { Id = 1, Name = "User 1", Email = "user1@example.com", Role = UserRole.Usuario };
-            var user2 = new User { Id = 2, Name = "User 2", Email = "user2@example.com", Role = UserRole.Administrador };
+            var user1 = new User { Id = 1, Name = "User 1", Email = "user1@example.com", Role = UserRole.User };
+            var user2 = new User { Id = 2, Name = "User 2", Email = "user2@example.com", Role = UserRole.Admin };
 
             _mockUserRepository.Setup(repo => repo.GetById("1")).Returns(user1);
             _mockUserRepository.Setup(repo => repo.GetById("2")).Returns(user2);
@@ -559,7 +559,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 999,
                 Name = "Special ID User",
                 Email = "special@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockUserRepository.Setup(repo => repo.GetById(specialUserId)).Returns(user);

@@ -72,7 +72,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 1,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("validpassword");
 
@@ -130,7 +130,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 1,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("correctpassword");
 
@@ -159,7 +159,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 2,
                 Name = "Admin User",
                 Email = "admin@example.com",
-                Role = UserRole.Administrador
+                Role = UserRole.Admin
             };
             adminUser.SetPassword("adminpassword");
 
@@ -193,7 +193,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 1,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("validpassword");
 
@@ -247,7 +247,7 @@ namespace FiapCloudGames.Tests.Services
                 Name = "New User",
                 Email = "newuser@example.com",
                 Password = "newpassword123",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockUserRepository.Setup(repo => repo.EmailExists(registerDto.Email)).Returns(false);
@@ -280,7 +280,7 @@ namespace FiapCloudGames.Tests.Services
                 Name = "New User",
                 Email = "existing@example.com",
                 Password = "password123",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockUserRepository.Setup(repo => repo.EmailExists(registerDto.Email)).Returns(true);
@@ -303,7 +303,7 @@ namespace FiapCloudGames.Tests.Services
                 Name = "Admin User",
                 Email = "admin@example.com",
                 Password = "adminpassword123",
-                Role = UserRole.Administrador
+                Role = UserRole.Admin
             };
 
             User capturedUser = null!;
@@ -317,7 +317,7 @@ namespace FiapCloudGames.Tests.Services
             // Assert
             result.Should().NotBeNull();
             capturedUser.Should().NotBeNull();
-            capturedUser.Role.Should().Be(UserRole.Administrador);
+            capturedUser.Role.Should().Be(UserRole.Admin);
             capturedUser.Name.Should().Be(registerDto.Name);
             capturedUser.Email.Should().Be(registerDto.Email);
             capturedUser.PasswordHash.Should().NotBeNullOrEmpty();
@@ -332,7 +332,7 @@ namespace FiapCloudGames.Tests.Services
                 Name = "Test User",
                 Email = "test@example.com",
                 Password = "plaintextpassword",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             User capturedUser = null!;
@@ -360,7 +360,7 @@ namespace FiapCloudGames.Tests.Services
                 Name = "José da Silva Ñoño",
                 Email = "josé.ñoño@example.com",
                 Password = "password123!@#",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockUserRepository.Setup(repo => repo.EmailExists(registerDto.Email)).Returns(false);
@@ -394,7 +394,7 @@ namespace FiapCloudGames.Tests.Services
                 Name = "Test User",
                 Email = "test@example.com",
                 Password = "password123",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockUserRepository.Setup(repo => repo.EmailExists(registerDto.Email))
@@ -414,7 +414,7 @@ namespace FiapCloudGames.Tests.Services
                 Name = "Test User",
                 Email = "test@example.com",
                 Password = "password123",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockUserRepository.Setup(repo => repo.EmailExists(registerDto.Email)).Returns(false);
@@ -445,7 +445,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 123,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("password");
 
@@ -495,7 +495,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 1,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("password");
 
@@ -525,7 +525,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 1,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("password");
 
@@ -561,7 +561,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 1,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("password");
 
@@ -607,7 +607,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 1,
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("password");
 
@@ -640,7 +640,7 @@ namespace FiapCloudGames.Tests.Services
                 Name = "Integration User",
                 Email = "integration@example.com",
                 Password = "integrationpassword123",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             var loginDto = new LoginDto
@@ -684,8 +684,8 @@ namespace FiapCloudGames.Tests.Services
         }
 
         [Theory]
-        [InlineData(UserRole.Usuario)]
-        [InlineData(UserRole.Administrador)]
+        [InlineData(UserRole.User)]
+        [InlineData(UserRole.Admin)]
         public void AuthService_ShouldHandleAllUserRoles(UserRole role)
         {
             // Arrange
@@ -747,7 +747,7 @@ namespace FiapCloudGames.Tests.Services
                 Name = "Long Password User",
                 Email = "longpassword@example.com",
                 Password = longPassword,
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
 
             _mockUserRepository.Setup(repo => repo.EmailExists(registerDto.Email)).Returns(false);
@@ -776,7 +776,7 @@ namespace FiapCloudGames.Tests.Services
                 Id = 1,
                 Name = "Security User",
                 Email = "security@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("secretpassword123");
 

@@ -31,7 +31,7 @@ namespace FiapCloudGames.Tests.Repositories
             {
                 Name = "Test User",
                 Email = "test@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("testpassword");
 
@@ -65,7 +65,7 @@ namespace FiapCloudGames.Tests.Repositories
             {
                 Name = "Another Test User",
                 Email = "another@example.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("anotherpassword");
 
@@ -101,7 +101,7 @@ namespace FiapCloudGames.Tests.Repositories
             {
                 Name = "Email Test User",
                 Email = "email@test.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("emailpassword");
 
@@ -137,7 +137,7 @@ namespace FiapCloudGames.Tests.Repositories
             {
                 Name = "Email Exists Test",
                 Email = "exists@test.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("existspassword");
 
@@ -171,7 +171,7 @@ namespace FiapCloudGames.Tests.Repositories
             {
                 Name = "New User",
                 Email = "new@user.com",
-                Role = UserRole.Administrador
+                Role = UserRole.Admin
             };
             user.SetPassword("newuserpassword");
 
@@ -197,13 +197,13 @@ namespace FiapCloudGames.Tests.Repositories
             {
                 Name = "Original Name",
                 Email = "original@email.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("originalpassword");
 
             var createdUser = await _repository.CreateAsync(user);
             createdUser.Name = "Updated Name";
-            createdUser.Role = UserRole.Administrador;
+            createdUser.Role = UserRole.Admin;
 
             // Act
             var updatedUser = await _repository.UpdateAsync(createdUser);
@@ -211,7 +211,7 @@ namespace FiapCloudGames.Tests.Repositories
             // Assert
             Assert.NotNull(updatedUser);
             Assert.Equal("Updated Name", updatedUser.Name);
-            Assert.Equal(UserRole.Administrador, updatedUser.Role);
+            Assert.Equal(UserRole.Admin, updatedUser.Role);
         }
 
         [Fact]
@@ -222,7 +222,7 @@ namespace FiapCloudGames.Tests.Repositories
             {
                 Name = "User to Delete",
                 Email = "delete@test.com",
-                Role = UserRole.Usuario
+                Role = UserRole.User
             };
             user.SetPassword("deletepassword");
 
@@ -245,8 +245,8 @@ namespace FiapCloudGames.Tests.Repositories
         public async Task GetAllAsync_ShouldReturnAllUsers()
         {
             // Arrange
-            var user1 = new User { Name = "User 1", Email = "user1@test.com", Role = UserRole.Usuario };
-            var user2 = new User { Name = "User 2", Email = "user2@test.com", Role = UserRole.Administrador };
+            var user1 = new User { Name = "User 1", Email = "user1@test.com", Role = UserRole.User };
+            var user2 = new User { Name = "User 2", Email = "user2@test.com", Role = UserRole.Admin };
             
             user1.SetPassword("password1");
             user2.SetPassword("password2");
