@@ -38,7 +38,7 @@ namespace FiapCloudGames.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult GetUser(string id)
         {
-            var user = _service.ObterPorId(id);
+            var user = _service.GetByIdAsync(id);
             if (user == null) return NotFound();
 
             return Ok(new
@@ -66,7 +66,7 @@ namespace FiapCloudGames.Api.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            var user = _service.ObterPorId(userId);
+            var user = _service.GetByIdAsync(userId);
             if (user == null) return NotFound();
 
             return Ok(new
@@ -94,8 +94,8 @@ namespace FiapCloudGames.Api.Controllers
             if (user == null)
                 return BadRequest("User data is required");
 
-            _service.Criar(user);
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, new
+            _service.CreateUserAsync(user);
+            return CreatedAtAction(nameof(CriarUser), new { id = user.Id }, new
             {
                 Id = user.Id,
                 Name = user.Name,

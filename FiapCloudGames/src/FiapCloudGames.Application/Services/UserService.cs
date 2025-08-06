@@ -13,8 +13,8 @@ namespace FiapCloudGames.Application.Services
             _repo = repo;
         }
 
-        public User? ObterPorId(string id) => _repo.GetById(id);
+        public User? GetByIdAsync(string id) => _repo.GetById(id);
 
-        public void Criar(User user) => _repo.Add(user);
+        public void CreateUserAsync(User user) => _repo.Add(user);
     }
 }

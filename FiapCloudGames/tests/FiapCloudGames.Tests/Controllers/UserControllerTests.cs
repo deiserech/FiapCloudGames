@@ -39,7 +39,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Role = UserRole.Usuario
             };
 
-            _mockUserService.Setup(s => s.ObterPorId(userId)).Returns(expectedUser);
+            _mockUserService.Setup(s => s.GetByIdAsync(userId)).Returns(expectedUser);
 
             // Act
             var result = _userController.GetUser(userId);
@@ -68,7 +68,7 @@ namespace FiapCloudGames.Tests.Controllers
             var roleProperty = returnedData.GetType().GetProperty("Role");
             roleProperty!.GetValue(returnedData).Should().Be(expectedUser.Role.ToString());
 
-            _mockUserService.Verify(s => s.ObterPorId(userId), Times.Once);
+            _mockUserService.Verify(s => s.GetByIdAsync(userId), Times.Once);
         }
 
         [Fact]
@@ -76,14 +76,14 @@ namespace FiapCloudGames.Tests.Controllers
         {
             // Arrange
             var userId = "999";
-            _mockUserService.Setup(s => s.ObterPorId(userId)).Returns((User?)null);
+            _mockUserService.Setup(s => s.GetByIdAsync(userId)).Returns((User?)null);
 
             // Act
             var result = _userController.GetUser(userId);
 
             // Assert
             result.Should().BeOfType<NotFoundResult>();
-            _mockUserService.Verify(s => s.ObterPorId(userId), Times.Once);
+            _mockUserService.Verify(s => s.GetByIdAsync(userId), Times.Once);
         }
 
         [Theory]
@@ -94,13 +94,13 @@ namespace FiapCloudGames.Tests.Controllers
         public void GetUser_WithVariousIds_ShouldCallService(string userId)
         {
             // Arrange
-            _mockUserService.Setup(s => s.ObterPorId(userId)).Returns((User?)null);
+            _mockUserService.Setup(s => s.GetByIdAsync(userId)).Returns((User?)null);
 
             // Act
             var result = _userController.GetUser(userId);
 
             // Assert
-            _mockUserService.Verify(s => s.ObterPorId(userId), Times.Once);
+            _mockUserService.Verify(s => s.GetByIdAsync(userId), Times.Once);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Role = UserRole.Administrador
             };
 
-            _mockUserService.Setup(s => s.ObterPorId(userId)).Returns(adminUser);
+            _mockUserService.Setup(s => s.GetByIdAsync(userId)).Returns(adminUser);
 
             // Act
             var result = _userController.GetUser(userId);
@@ -135,7 +135,7 @@ namespace FiapCloudGames.Tests.Controllers
         {
             // Arrange
             var userId = "123";
-            _mockUserService.Setup(s => s.ObterPorId(userId))
+            _mockUserService.Setup(s => s.GetByIdAsync(userId))
                            .Throws(new InvalidOperationException("Database error"));
 
             // Act & Assert
@@ -176,7 +176,7 @@ namespace FiapCloudGames.Tests.Controllers
                 }
             };
 
-            _mockUserService.Setup(s => s.ObterPorId(userId)).Returns(expectedUser);
+            _mockUserService.Setup(s => s.GetByIdAsync(userId)).Returns(expectedUser);
 
             // Act
             var result = _userController.GetProfile();
@@ -201,7 +201,7 @@ namespace FiapCloudGames.Tests.Controllers
             var roleProperty = returnedData.GetType().GetProperty("Role");
             roleProperty!.GetValue(returnedData).Should().Be(expectedUser.Role.ToString());
 
-            _mockUserService.Verify(s => s.ObterPorId(userId), Times.Once);
+            _mockUserService.Verify(s => s.GetByIdAsync(userId), Times.Once);
         }
 
         [Fact]
@@ -223,7 +223,7 @@ namespace FiapCloudGames.Tests.Controllers
 
             // Assert
             result.Should().BeOfType<UnauthorizedResult>();
-            _mockUserService.Verify(s => s.ObterPorId(It.IsAny<string>()), Times.Never);
+            _mockUserService.Verify(s => s.GetByIdAsync(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -246,14 +246,14 @@ namespace FiapCloudGames.Tests.Controllers
                 }
             };
 
-            _mockUserService.Setup(s => s.ObterPorId(userId)).Returns((User?)null);
+            _mockUserService.Setup(s => s.GetByIdAsync(userId)).Returns((User?)null);
 
             // Act
             var result = _userController.GetProfile();
 
             // Assert
             result.Should().BeOfType<NotFoundResult>();
-            _mockUserService.Verify(s => s.ObterPorId(userId), Times.Once);
+            _mockUserService.Verify(s => s.GetByIdAsync(userId), Times.Once);
         }
 
         [Fact]
@@ -280,7 +280,7 @@ namespace FiapCloudGames.Tests.Controllers
 
             // Assert
             result.Should().BeOfType<UnauthorizedResult>();
-            _mockUserService.Verify(s => s.ObterPorId(It.IsAny<string>()), Times.Never);
+            _mockUserService.Verify(s => s.GetByIdAsync(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -303,7 +303,7 @@ namespace FiapCloudGames.Tests.Controllers
                 }
             };
 
-            _mockUserService.Setup(s => s.ObterPorId(userId))
+            _mockUserService.Setup(s => s.GetByIdAsync(userId))
                            .Throws(new InvalidOperationException("Database connection failed"));
 
             // Act & Assert
@@ -327,7 +327,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Role = UserRole.Usuario
             };
 
-            _mockUserService.Setup(s => s.Criar(It.IsAny<User>())).Verifiable();
+            _mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<User>())).Verifiable();
 
             // Act
             var result = _userController.CriarUser(user);
@@ -354,7 +354,7 @@ namespace FiapCloudGames.Tests.Controllers
             var roleProperty = returnedData.GetType().GetProperty("Role");
             roleProperty!.GetValue(returnedData).Should().Be(user.Role.ToString());
 
-            _mockUserService.Verify(s => s.Criar(user), Times.Once);
+            _mockUserService.Verify(s => s.CreateUserAsync(user), Times.Once);
         }
 
         [Fact]
@@ -369,7 +369,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Role = UserRole.Administrador
             };
 
-            _mockUserService.Setup(s => s.Criar(It.IsAny<User>())).Verifiable();
+            _mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<User>())).Verifiable();
 
             // Act
             var result = _userController.CriarUser(user);
@@ -382,7 +382,7 @@ namespace FiapCloudGames.Tests.Controllers
             var roleProperty = returnedData!.GetType().GetProperty("Role");
             roleProperty!.GetValue(returnedData).Should().Be("Administrador");
 
-            _mockUserService.Verify(s => s.Criar(user), Times.Once);
+            _mockUserService.Verify(s => s.CreateUserAsync(user), Times.Once);
         }
 
         [Fact]
@@ -399,7 +399,7 @@ namespace FiapCloudGames.Tests.Controllers
             var badRequestResult = result as BadRequestObjectResult;
             badRequestResult.Should().NotBeNull();
             badRequestResult!.Value.Should().Be("User data is required");
-            _mockUserService.Verify(s => s.Criar(It.IsAny<User>()), Times.Never);
+            _mockUserService.Verify(s => s.CreateUserAsync(It.IsAny<User>()), Times.Never);
         }
 
         [Fact]
@@ -414,7 +414,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Role = UserRole.Usuario
             };
 
-            _mockUserService.Setup(s => s.Criar(It.IsAny<User>()))
+            _mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<User>()))
                            .Throws(new InvalidOperationException("Email already exists"));
 
             // Act & Assert
@@ -521,14 +521,14 @@ namespace FiapCloudGames.Tests.Controllers
         public void GetUser_WithDifferentUserIdFormats_ShouldHandleCorrectly(string userId)
         {
             // Arrange
-            _mockUserService.Setup(s => s.ObterPorId(userId)).Returns((User?)null);
+            _mockUserService.Setup(s => s.GetByIdAsync(userId)).Returns((User?)null);
 
             // Act
             var result = _userController.GetUser(userId);
 
             // Assert
             result.Should().BeOfType<NotFoundResult>();
-            _mockUserService.Verify(s => s.ObterPorId(userId), Times.Once);
+            _mockUserService.Verify(s => s.GetByIdAsync(userId), Times.Once);
         }
 
         [Fact]
@@ -562,14 +562,14 @@ namespace FiapCloudGames.Tests.Controllers
                 }
             };
 
-            _mockUserService.Setup(s => s.ObterPorId(userId)).Returns(expectedUser);
+            _mockUserService.Setup(s => s.GetByIdAsync(userId)).Returns(expectedUser);
 
             // Act
             var result = _userController.GetProfile();
 
             // Assert
             result.Should().BeOfType<OkObjectResult>();
-            _mockUserService.Verify(s => s.ObterPorId(userId), Times.Once);
+            _mockUserService.Verify(s => s.GetByIdAsync(userId), Times.Once);
         }
 
         [Fact]
@@ -584,7 +584,7 @@ namespace FiapCloudGames.Tests.Controllers
                 Role = UserRole.Usuario
             };
 
-            _mockUserService.Setup(s => s.Criar(It.IsAny<User>())).Verifiable();
+            _mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<User>())).Verifiable();
 
             // Act
             var result = _userController.CriarUser(user);
@@ -600,7 +600,7 @@ namespace FiapCloudGames.Tests.Controllers
             var emailProperty = returnedData.GetType().GetProperty("Email");
             emailProperty!.GetValue(returnedData).Should().Be(user.Email);
 
-            _mockUserService.Verify(s => s.Criar(user), Times.Once);
+            _mockUserService.Verify(s => s.CreateUserAsync(user), Times.Once);
         }
 
         [Fact]
@@ -617,7 +617,7 @@ namespace FiapCloudGames.Tests.Controllers
                 PasswordHash = "super-secret-hash"
             };
 
-            _mockUserService.Setup(s => s.ObterPorId(userId)).Returns(user);
+            _mockUserService.Setup(s => s.GetByIdAsync(userId)).Returns(user);
 
             // Act
             var result = _userController.GetUser(userId);
@@ -662,7 +662,7 @@ namespace FiapCloudGames.Tests.Controllers
                 }
             };
 
-            _mockUserService.Setup(s => s.ObterPorId(userId)).Returns(user);
+            _mockUserService.Setup(s => s.GetByIdAsync(userId)).Returns(user);
 
             // Act
             var result = _userController.GetProfile();

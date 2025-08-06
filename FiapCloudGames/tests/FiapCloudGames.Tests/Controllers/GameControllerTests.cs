@@ -39,19 +39,19 @@ namespace FiapCloudGames.Tests.Controllers
                 ReleaseDate = DateTime.Now
             };
 
-            _mockGameService.Setup(s => s.Cadastrar(It.IsAny<Game>())).Verifiable();
+            _mockGameService.Setup(s => s.CreateGameAsync(It.IsAny<Game>())).Verifiable();
 
             // Act
-            var result = _gameController.Cadastrar(game);
+            var result = _gameController.CreateGame(game);
 
             // Assert
             result.Should().BeOfType<CreatedAtActionResult>();
             var createdResult = result as CreatedAtActionResult;
             createdResult.Should().NotBeNull();
-            createdResult!.ActionName.Should().Be(nameof(_gameController.ObterPorId));
+            createdResult!.ActionName.Should().Be(nameof(_gameController.GetGameById));
             createdResult.RouteValues.Should().ContainKey("id").WhoseValue.Should().Be(game.Id);
             createdResult.Value.Should().Be(game);
-            _mockGameService.Verify(s => s.Cadastrar(game), Times.Once);
+            _mockGameService.Verify(s => s.CreateGameAsync(game), Times.Once);
         }
 
         [Fact]
@@ -62,14 +62,14 @@ namespace FiapCloudGames.Tests.Controllers
             _gameController.ModelState.AddModelError("Title", "Title is required");
 
             // Act
-            var result = _gameController.Cadastrar(game);
+            var result = _gameController.CreateGame(game);
 
             // Assert
             result.Should().BeOfType<BadRequestObjectResult>();
             var badRequestResult = result as BadRequestObjectResult;
             badRequestResult.Should().NotBeNull();
             badRequestResult!.Value.Should().BeOfType<SerializableError>();
-            _mockGameService.Verify(s => s.Cadastrar(It.IsAny<Game>()), Times.Never);
+            _mockGameService.Verify(s => s.CreateGameAsync(It.IsAny<Game>()), Times.Never);
         }
 
         [Fact]
@@ -79,14 +79,14 @@ namespace FiapCloudGames.Tests.Controllers
             Game nullGame = null!;
 
             // Act
-            var result = _gameController.Cadastrar(nullGame);
+            var result = _gameController.CreateGame(nullGame);
 
             // Assert
             result.Should().BeOfType<BadRequestObjectResult>();
             var badRequestResult = result as BadRequestObjectResult;
             badRequestResult.Should().NotBeNull();
             badRequestResult!.Value.Should().Be("Game data is required");
-            _mockGameService.Verify(s => s.Cadastrar(It.IsAny<Game>()), Times.Never);
+            _mockGameService.Verify(s => s.CreateGameAsync(It.IsAny<Game>()), Times.Never);
         }
 
         [Fact]
@@ -102,11 +102,11 @@ namespace FiapCloudGames.Tests.Controllers
                 ReleaseDate = DateTime.Now
             };
 
-            _mockGameService.Setup(s => s.Cadastrar(It.IsAny<Game>()))
+            _mockGameService.Setup(s => s.CreateGameAsync(It.IsAny<Game>()))
                            .Throws(new InvalidOperationException("Database error"));
 
             // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => _gameController.Cadastrar(game));
+            var exception = Assert.Throws<InvalidOperationException>(() => _gameController.CreateGame(game));
             exception.Message.Should().Be("Database error");
         }
 
@@ -128,17 +128,17 @@ namespace FiapCloudGames.Tests.Controllers
                 ReleaseDate = DateTime.Now
             };
 
-            _mockGameService.Setup(s => s.ObterPorId(gameId)).Returns(expectedGame);
+            _mockGameService.Setup(s => s.GetByAsync(gameId)).Returns(expectedGame);
 
             // Act
-            var result = _gameController.ObterPorId(gameId);
+            var result = _gameController.GetGameById(gameId);
 
             // Assert
             result.Should().BeOfType<OkObjectResult>();
             var okResult = result as OkObjectResult;
             okResult.Should().NotBeNull();
             okResult!.Value.Should().Be(expectedGame);
-            _mockGameService.Verify(s => s.ObterPorId(gameId), Times.Once);
+            _mockGameService.Verify(s => s.GetByAsync(gameId), Times.Once);
         }
 
         [Fact]
@@ -146,14 +146,14 @@ namespace FiapCloudGames.Tests.Controllers
         {
             // Arrange
             var gameId = 999;
-            _mockGameService.Setup(s => s.ObterPorId(gameId)).Returns((Game?)null);
+            _mockGameService.Setup(s => s.GetByAsync(gameId)).Returns((Game?)null);
 
             // Act
-            var result = _gameController.ObterPorId(gameId);
+            var result = _gameController.GetGameById(gameId);
 
             // Assert
             result.Should().BeOfType<NotFoundResult>();
-            _mockGameService.Verify(s => s.ObterPorId(gameId), Times.Once);
+            _mockGameService.Verify(s => s.GetByAsync(gameId), Times.Once);
         }
 
         [Theory]
@@ -163,14 +163,14 @@ namespace FiapCloudGames.Tests.Controllers
         public void ObterPorId_WithInvalidId_ShouldCallServiceAndReturnNotFound(int invalidId)
         {
             // Arrange
-            _mockGameService.Setup(s => s.ObterPorId(invalidId)).Returns((Game?)null);
+            _mockGameService.Setup(s => s.GetByAsync(invalidId)).Returns((Game?)null);
 
             // Act
-            var result = _gameController.ObterPorId(invalidId);
+            var result = _gameController.GetGameById(invalidId);
 
             // Assert
             result.Should().BeOfType<NotFoundResult>();
-            _mockGameService.Verify(s => s.ObterPorId(invalidId), Times.Once);
+            _mockGameService.Verify(s => s.GetByAsync(invalidId), Times.Once);
         }
 
         [Fact]
@@ -178,11 +178,11 @@ namespace FiapCloudGames.Tests.Controllers
         {
             // Arrange
             var gameId = 1;
-            _mockGameService.Setup(s => s.ObterPorId(gameId))
+            _mockGameService.Setup(s => s.GetByAsync(gameId))
                            .Throws(new InvalidOperationException("Database connection failed"));
 
             // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => _gameController.ObterPorId(gameId));
+            var exception = Assert.Throws<InvalidOperationException>(() => _gameController.GetGameById(gameId));
             exception.Message.Should().Be("Database connection failed");
         }
 
@@ -201,17 +201,17 @@ namespace FiapCloudGames.Tests.Controllers
                 new Game { Id = 3, Title = "Game 3", Description = "Description 3", Price = 49.99m, ReleaseDate = DateTime.Now }
             };
 
-            _mockGameService.Setup(s => s.ListarTodos()).Returns(expectedGames);
+            _mockGameService.Setup(s => s.GetallAsync()).Returns(expectedGames);
 
             // Act
-            var result = _gameController.ListarTodos();
+            var result = _gameController.GetGames();
 
             // Assert
             result.Should().BeOfType<OkObjectResult>();
             var okResult = result as OkObjectResult;
             okResult.Should().NotBeNull();
             okResult!.Value.Should().BeEquivalentTo(expectedGames);
-            _mockGameService.Verify(s => s.ListarTodos(), Times.Once);
+            _mockGameService.Verify(s => s.GetallAsync(), Times.Once);
         }
 
         [Fact]
@@ -219,17 +219,17 @@ namespace FiapCloudGames.Tests.Controllers
         {
             // Arrange
             var emptyGamesList = new List<Game>();
-            _mockGameService.Setup(s => s.ListarTodos()).Returns(emptyGamesList);
+            _mockGameService.Setup(s => s.GetallAsync()).Returns(emptyGamesList);
 
             // Act
-            var result = _gameController.ListarTodos();
+            var result = _gameController.GetGames();
 
             // Assert
             result.Should().BeOfType<OkObjectResult>();
             var okResult = result as OkObjectResult;
             okResult.Should().NotBeNull();
             okResult!.Value.Should().BeEquivalentTo(emptyGamesList);
-            _mockGameService.Verify(s => s.ListarTodos(), Times.Once);
+            _mockGameService.Verify(s => s.GetallAsync(), Times.Once);
         }
 
         [Fact]
@@ -241,10 +241,10 @@ namespace FiapCloudGames.Tests.Controllers
                 new Game { Id = 1, Title = "Only Game", Description = "The only game", Price = 99.99m, ReleaseDate = DateTime.Now }
             };
 
-            _mockGameService.Setup(s => s.ListarTodos()).Returns(singleGame);
+            _mockGameService.Setup(s => s.GetallAsync()).Returns(singleGame);
 
             // Act
-            var result = _gameController.ListarTodos();
+            var result = _gameController.GetGames();
 
             // Assert
             result.Should().BeOfType<OkObjectResult>();
@@ -253,18 +253,18 @@ namespace FiapCloudGames.Tests.Controllers
             okResult!.Value.Should().BeEquivalentTo(singleGame);
             var returnedGames = okResult.Value as IEnumerable<Game>;
             returnedGames.Should().HaveCount(1);
-            _mockGameService.Verify(s => s.ListarTodos(), Times.Once);
+            _mockGameService.Verify(s => s.GetallAsync(), Times.Once);
         }
 
         [Fact]
         public void ListarTodos_WhenServiceThrowsException_ShouldPropagateException()
         {
             // Arrange
-            _mockGameService.Setup(s => s.ListarTodos())
+            _mockGameService.Setup(s => s.GetallAsync())
                            .Throws(new InvalidOperationException("Database unavailable"));
 
             // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => _gameController.ListarTodos());
+            var exception = Assert.Throws<InvalidOperationException>(() => _gameController.GetGames());
             exception.Message.Should().Be("Database unavailable");
         }
 
@@ -272,17 +272,17 @@ namespace FiapCloudGames.Tests.Controllers
         public void ListarTodos_WhenServiceReturnsNull_ShouldReturnOkWithNull()
         {
             // Arrange
-            _mockGameService.Setup(s => s.ListarTodos()).Returns((IEnumerable<Game>?)null!);
+            _mockGameService.Setup(s => s.GetallAsync()).Returns((IEnumerable<Game>?)null!);
 
             // Act
-            var result = _gameController.ListarTodos();
+            var result = _gameController.GetGames();
 
             // Assert
             result.Should().BeOfType<OkObjectResult>();
             var okResult = result as OkObjectResult;
             okResult.Should().NotBeNull();
             okResult!.Value.Should().BeNull();
-            _mockGameService.Verify(s => s.ListarTodos(), Times.Once);
+            _mockGameService.Verify(s => s.GetallAsync(), Times.Once);
         }
 
         #endregion
@@ -330,7 +330,7 @@ namespace FiapCloudGames.Tests.Controllers
         public void Cadastrar_ShouldHaveCorrectAttributes()
         {
             // Arrange
-            var method = typeof(GameController).GetMethod(nameof(GameController.Cadastrar));
+            var method = typeof(GameController).GetMethod(nameof(GameController.CreateGame));
 
             // Assert
             method.Should().NotBeNull();
@@ -348,7 +348,7 @@ namespace FiapCloudGames.Tests.Controllers
         public void ObterPorId_ShouldHaveCorrectAttributes()
         {
             // Arrange
-            var method = typeof(GameController).GetMethod(nameof(GameController.ObterPorId));
+            var method = typeof(GameController).GetMethod(nameof(GameController.GetGameById));
 
             // Assert
             method.Should().NotBeNull();
@@ -365,7 +365,7 @@ namespace FiapCloudGames.Tests.Controllers
         public void ListarTodos_ShouldHaveCorrectAttributes()
         {
             // Arrange
-            var method = typeof(GameController).GetMethod(nameof(GameController.ListarTodos));
+            var method = typeof(GameController).GetMethod(nameof(GameController.GetGames));
 
             // Assert
             method.Should().NotBeNull();
@@ -391,7 +391,7 @@ namespace FiapCloudGames.Tests.Controllers
             _gameController.ModelState.AddModelError("ReleaseDate", "Release date is required");
 
             // Act
-            var result = _gameController.Cadastrar(game);
+            var result = _gameController.CreateGame(game);
 
             // Assert
             result.Should().BeOfType<BadRequestObjectResult>();
@@ -416,14 +416,14 @@ namespace FiapCloudGames.Tests.Controllers
                 ReleaseDate = DateTime.MaxValue
             };
 
-            _mockGameService.Setup(s => s.Cadastrar(It.IsAny<Game>())).Verifiable();
+            _mockGameService.Setup(s => s.CreateGameAsync(It.IsAny<Game>())).Verifiable();
 
             // Act
-            var result = _gameController.Cadastrar(game);
+            var result = _gameController.CreateGame(game);
 
             // Assert
             result.Should().BeOfType<CreatedAtActionResult>();
-            _mockGameService.Verify(s => s.Cadastrar(game), Times.Once);
+            _mockGameService.Verify(s => s.CreateGameAsync(game), Times.Once);
         }
 
         [Theory]
@@ -433,13 +433,13 @@ namespace FiapCloudGames.Tests.Controllers
         public void ObterPorId_WithVariousValidIds_ShouldCallService(int gameId)
         {
             // Arrange
-            _mockGameService.Setup(s => s.ObterPorId(gameId)).Returns((Game?)null);
+            _mockGameService.Setup(s => s.GetByAsync(gameId)).Returns((Game?)null);
 
             // Act
-            var result = _gameController.ObterPorId(gameId);
+            var result = _gameController.GetGameById(gameId);
 
             // Assert
-            _mockGameService.Verify(s => s.ObterPorId(gameId), Times.Once);
+            _mockGameService.Verify(s => s.GetByAsync(gameId), Times.Once);
         }
 
         #endregion

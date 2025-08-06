@@ -14,19 +14,9 @@ namespace FiapCloudGames.Application.Services
             _gameRepository = gameRepository;
         }
 
-        public async Task<IEnumerable<Promotion>> GetAllPromotionsAsync()
-        {
-            return await _promotionRepository.GetAllAsync();
-        }
-
         public async Task<Promotion?> GetPromotionByIdAsync(int id)
         {
             return await _promotionRepository.GetByIdAsync(id);
-        }
-
-        public async Task<IEnumerable<Promotion>> GetPromotionsByGameIdAsync(int gameId)
-        {
-            return await _promotionRepository.GetByGameIdAsync(gameId);
         }
 
         public async Task<IEnumerable<Promotion>> GetActivePromotionsAsync()
@@ -112,7 +102,7 @@ namespace FiapCloudGames.Application.Services
         public async Task<Promotion?> GetBestPromotionForGameAsync(int gameId)
         {
             var activePromotions = await GetActivePromotionsByGameIdAsync(gameId);
-            
+
             if (!activePromotions.Any())
             {
                 return null;
@@ -126,7 +116,7 @@ namespace FiapCloudGames.Application.Services
             }
 
             var originalPrice = game.Price;
-            
+
             // Encontra a promoção que oferece o maior desconto
             return activePromotions
                 .OrderBy(p => p.CalculateDiscountedPrice(originalPrice))

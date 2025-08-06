@@ -1,9 +1,7 @@
-using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace FiapCloudGames.Api.Controllers
 {
@@ -40,7 +38,7 @@ namespace FiapCloudGames.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public IActionResult Cadastrar([FromBody] Game game)
+        public IActionResult CreateGame([FromBody] Game game)
         {
             if (game == null)
                 return BadRequest("Game data is required");
@@ -48,8 +46,8 @@ namespace FiapCloudGames.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _service.Cadastrar(game);
-            return CreatedAtAction(nameof(ObterPorId), new { id = game.Id }, game);
+            _service.CreateAsync(game);
+            return CreatedAtAction(nameof(CreateGame), new { id = game.Id }, game);
         }
 
         /// <summary>
@@ -63,9 +61,9 @@ namespace FiapCloudGames.Api.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(Game), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult ObterPorId(int id)
+        public IActionResult GetGameById(int id)
         {
-            var game = _service.ObterPorId(id);
+            var game = _service.GetByIdAsync(id);
             if (game == null) return NotFound();
             return Ok(game);
         }
@@ -78,11 +76,9 @@ namespace FiapCloudGames.Api.Controllers
         [HttpGet]
         [AllowAnonymous]
         [ProducesResponseType(typeof(IEnumerable<Game>), StatusCodes.Status200OK)]
-        public IActionResult ListarTodos()
+        public IActionResult GetGames()
         {
-            return Ok(_service.ListarTodos());
+            return Ok(_service.GetallAsync());
         }
     }
-
-
 }

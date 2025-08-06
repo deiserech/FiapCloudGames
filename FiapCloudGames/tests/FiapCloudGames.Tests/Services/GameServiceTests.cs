@@ -34,7 +34,7 @@ namespace FiapCloudGames.Tests.Services
             };
 
             // Act
-            _gameService.Cadastrar(game);
+            _gameService.CreateGameAsync(game);
 
             // Assert
             _mockGameRepository.Verify(repo => repo.Add(game), Times.Once);
@@ -48,7 +48,7 @@ namespace FiapCloudGames.Tests.Services
 
             // Act & Assert
             // O service não faz validação de null, então deve passar para o repository
-            _gameService.Cadastrar(nullGame);
+            _gameService.CreateGameAsync(nullGame);
             _mockGameRepository.Verify(repo => repo.Add(nullGame), Times.Once);
         }
 
@@ -70,7 +70,7 @@ namespace FiapCloudGames.Tests.Services
                               .Returns(expectedGame);
 
             // Act
-            var result = _gameService.ObterPorId(gameId);
+            var result = _gameService.GetByAsync(gameId);
 
             // Assert
             result.Should().NotBeNull();
@@ -89,7 +89,7 @@ namespace FiapCloudGames.Tests.Services
                               .Returns((Game?)null);
 
             // Act
-            var result = _gameService.ObterPorId(invalidId);
+            var result = _gameService.GetByAsync(invalidId);
 
             // Assert
             result.Should().BeNull();
@@ -107,7 +107,7 @@ namespace FiapCloudGames.Tests.Services
                               .Returns((Game?)null);
 
             // Act
-            var result = _gameService.ObterPorId(invalidId);
+            var result = _gameService.GetByAsync(invalidId);
 
             // Assert
             result.Should().BeNull();
@@ -150,7 +150,7 @@ namespace FiapCloudGames.Tests.Services
                               .Returns(games);
 
             // Act
-            var result = _gameService.ListarTodos();
+            var result = _gameService.GetallAsync();
 
             // Assert
             result.Should().NotBeNull();
@@ -168,7 +168,7 @@ namespace FiapCloudGames.Tests.Services
                               .Returns(emptyGames);
 
             // Act
-            var result = _gameService.ListarTodos();
+            var result = _gameService.GetallAsync();
 
             // Assert
             result.Should().NotBeNull();
@@ -196,7 +196,7 @@ namespace FiapCloudGames.Tests.Services
                               .Returns(games);
 
             // Act
-            var result = _gameService.ListarTodos();
+            var result = _gameService.GetallAsync();
 
             // Assert
             result.Should().BeSameAs(games);
@@ -224,8 +224,8 @@ namespace FiapCloudGames.Tests.Services
             var game2 = new Game { Id = 2, Title = "Game 2", Price = 20.00m, ReleaseDate = DateTime.Now };
 
             // Act
-            _gameService.Cadastrar(game1);
-            _gameService.Cadastrar(game2);
+            _gameService.CreateGameAsync(game1);
+            _gameService.CreateGameAsync(game2);
 
             // Assert
             _mockGameRepository.Verify(repo => repo.Add(It.IsAny<Game>()), Times.Exactly(2));
@@ -244,8 +244,8 @@ namespace FiapCloudGames.Tests.Services
             _mockGameRepository.Setup(repo => repo.GetById(2)).Returns(game2);
 
             // Act
-            var result1 = _gameService.ObterPorId(1);
-            var result2 = _gameService.ObterPorId(2);
+            var result1 = _gameService.GetByAsync(1);
+            var result2 = _gameService.GetByAsync(2);
 
             // Assert
             result1.Should().Be(game1);
@@ -266,8 +266,8 @@ namespace FiapCloudGames.Tests.Services
             _mockGameRepository.Setup(repo => repo.GetAll()).Returns(games);
 
             // Act
-            var result1 = _gameService.ListarTodos();
-            var result2 = _gameService.ListarTodos();
+            var result1 = _gameService.GetallAsync();
+            var result2 = _gameService.GetallAsync();
 
             // Assert
             result1.Should().BeEquivalentTo(games);

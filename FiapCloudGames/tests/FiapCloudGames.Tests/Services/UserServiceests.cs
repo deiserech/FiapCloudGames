@@ -52,7 +52,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns(expectedUser);
 
             // Act
-            var result = _userService.ObterPorId(userId);
+            var result = _userService.GetByIdAsync(userId);
 
             // Assert
             result.Should().NotBeNull();
@@ -74,7 +74,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns((User?)null);
 
             // Act
-            var result = _userService.ObterPorId(userId);
+            var result = _userService.GetByIdAsync(userId);
 
             // Assert
             result.Should().BeNull();
@@ -94,7 +94,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns((User?)null);
 
             // Act
-            var result = _userService.ObterPorId(userId);
+            var result = _userService.GetByIdAsync(userId);
 
             // Assert
             _mockUserRepository.Verify(repo => repo.GetById(userId), Times.Once);
@@ -108,7 +108,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.GetById(nullId)).Returns((User?)null);
 
             // Act
-            var result = _userService.ObterPorId(nullId);
+            var result = _userService.GetByIdAsync(nullId);
 
             // Assert
             result.Should().BeNull();
@@ -132,7 +132,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns(adminUser);
 
             // Act
-            var result = _userService.ObterPorId(userId);
+            var result = _userService.GetByIdAsync(userId);
 
             // Assert
             result.Should().NotBeNull();
@@ -149,7 +149,7 @@ namespace FiapCloudGames.Tests.Services
                               .Throws(new InvalidOperationException("Database connection failed"));
 
             // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => _userService.ObterPorId(userId));
+            var exception = Assert.Throws<InvalidOperationException>(() => _userService.GetByIdAsync(userId));
             exception.Message.Should().Be("Database connection failed");
             _mockUserRepository.Verify(repo => repo.GetById(userId), Times.Once);
         }
@@ -171,7 +171,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns(userWithSpecialChars);
 
             // Act
-            var result = _userService.ObterPorId(userId);
+            var result = _userService.GetByIdAsync(userId);
 
             // Assert
             result.Should().NotBeNull();
@@ -196,9 +196,9 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns(user);
 
             // Act
-            var result1 = _userService.ObterPorId(userId);
-            var result2 = _userService.ObterPorId(userId);
-            var result3 = _userService.ObterPorId(userId);
+            var result1 = _userService.GetByIdAsync(userId);
+            var result2 = _userService.GetByIdAsync(userId);
+            var result3 = _userService.GetByIdAsync(userId);
 
             // Assert
             result1.Should().Be(user);
@@ -227,7 +227,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.Add(user)).Verifiable();
 
             // Act
-            _userService.Criar(user);
+            _userService.CreateUserAsync(user);
 
             // Assert
             _mockUserRepository.Verify(repo => repo.Add(user), Times.Once);
@@ -240,7 +240,7 @@ namespace FiapCloudGames.Tests.Services
             User nullUser = null!;
 
             // Act
-            _userService.Criar(nullUser);
+            _userService.CreateUserAsync(nullUser);
 
             // Assert
             _mockUserRepository.Verify(repo => repo.Add(nullUser), Times.Once);
@@ -262,7 +262,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.Add(adminUser)).Verifiable();
 
             // Act
-            _userService.Criar(adminUser);
+            _userService.CreateUserAsync(adminUser);
 
             // Assert
             _mockUserRepository.Verify(repo => repo.Add(adminUser), Times.Once);
@@ -284,7 +284,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.Add(userWithSpecialChars)).Verifiable();
 
             // Act
-            _userService.Criar(userWithSpecialChars);
+            _userService.CreateUserAsync(userWithSpecialChars);
 
             // Assert
             _mockUserRepository.Verify(repo => repo.Add(userWithSpecialChars), Times.Once);
@@ -306,7 +306,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.Add(userWithLongFields)).Verifiable();
 
             // Act
-            _userService.Criar(userWithLongFields);
+            _userService.CreateUserAsync(userWithLongFields);
 
             // Assert
             _mockUserRepository.Verify(repo => repo.Add(userWithLongFields), Times.Once);
@@ -328,7 +328,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.Add(userWithEmptyFields)).Verifiable();
 
             // Act
-            _userService.Criar(userWithEmptyFields);
+            _userService.CreateUserAsync(userWithEmptyFields);
 
             // Assert
             _mockUserRepository.Verify(repo => repo.Add(userWithEmptyFields), Times.Once);
@@ -351,7 +351,7 @@ namespace FiapCloudGames.Tests.Services
                               .Throws(new InvalidOperationException("Email already exists"));
 
             // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => _userService.Criar(user));
+            var exception = Assert.Throws<InvalidOperationException>(() => _userService.CreateUserAsync(user));
             exception.Message.Should().Be("Email already exists");
             _mockUserRepository.Verify(repo => repo.Add(user), Times.Once);
         }
@@ -373,7 +373,7 @@ namespace FiapCloudGames.Tests.Services
                               .Throws(new ArgumentException("Invalid email format"));
 
             // Act & Assert
-            var exception = Assert.Throws<ArgumentException>(() => _userService.Criar(user));
+            var exception = Assert.Throws<ArgumentException>(() => _userService.CreateUserAsync(user));
             exception.Message.Should().Be("Invalid email format");
             _mockUserRepository.Verify(repo => repo.Add(user), Times.Once);
         }
@@ -389,9 +389,9 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.Add(It.IsAny<User>())).Verifiable();
 
             // Act
-            _userService.Criar(user1);
-            _userService.Criar(user2);
-            _userService.Criar(user3);
+            _userService.CreateUserAsync(user1);
+            _userService.CreateUserAsync(user2);
+            _userService.CreateUserAsync(user3);
 
             // Assert
             _mockUserRepository.Verify(repo => repo.Add(user1), Times.Once);
@@ -416,8 +416,8 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.Add(user)).Verifiable();
 
             // Act
-            _userService.Criar(user);
-            _userService.Criar(user);
+            _userService.CreateUserAsync(user);
+            _userService.CreateUserAsync(user);
 
             // Assert
             _mockUserRepository.Verify(repo => repo.Add(user), Times.Exactly(2));
@@ -443,7 +443,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.Add(invalidUser)).Verifiable();
 
             // Act
-            _userService.Criar(invalidUser);
+            _userService.CreateUserAsync(invalidUser);
 
             // Assert
             // O serviço não faz validação, apenas delega para o repository
@@ -468,7 +468,7 @@ namespace FiapCloudGames.Tests.Services
                               .Callback<User>(user => capturedUser = user);
 
             // Act
-            _userService.Criar(complexUser);
+            _userService.CreateUserAsync(complexUser);
 
             // Assert
             capturedUser.Should().NotBeNull();
@@ -498,7 +498,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.Add(user)).Verifiable();
 
             // Act
-            _userService.Criar(user);
+            _userService.CreateUserAsync(user);
 
             // Assert
             _mockUserRepository.Verify(repo => repo.Add(user), Times.Once);
@@ -516,9 +516,9 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.GetById("3")).Returns((User?)null);
 
             // Act
-            var result1 = _userService.ObterPorId("1");
-            var result2 = _userService.ObterPorId("2");
-            var result3 = _userService.ObterPorId("3");
+            var result1 = _userService.GetByIdAsync("1");
+            var result2 = _userService.GetByIdAsync("2");
+            var result3 = _userService.GetByIdAsync("3");
 
             // Assert
             result1.Should().Be(user1);
@@ -542,7 +542,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.GetById(largeUserId)).Returns((User?)null);
 
             // Act
-            var result = _userService.ObterPorId(largeUserId);
+            var result = _userService.GetByIdAsync(largeUserId);
 
             // Assert
             result.Should().BeNull();
@@ -565,7 +565,7 @@ namespace FiapCloudGames.Tests.Services
             _mockUserRepository.Setup(repo => repo.GetById(specialUserId)).Returns(user);
 
             // Act
-            var result = _userService.ObterPorId(specialUserId);
+            var result = _userService.GetByIdAsync(specialUserId);
 
             // Assert
             result.Should().Be(user);
