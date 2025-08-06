@@ -1,9 +1,9 @@
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Interfaces;
 using FiapCloudGames.Infrastructure.Repositories;
 using FiapCloudGames.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using FiapCloudGames.Domain.Interfaces.Repositories;
 
 namespace FiapCloudGames.Tests.Repositories
 {

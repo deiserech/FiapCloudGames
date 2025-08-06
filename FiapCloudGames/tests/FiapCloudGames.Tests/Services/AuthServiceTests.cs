@@ -5,11 +5,11 @@ using Microsoft.Extensions.Configuration;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.DTOs;
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Interfaces;
 using FiapCloudGames.Domain.Enums;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Collections.Generic;
+using FiapCloudGames.Domain.Interfaces.Repositories;
 
 namespace FiapCloudGames.Tests.Services
 {

@@ -1,13 +1,9 @@
 using FiapCloudGames.Domain.Entities;
-using System.Collections.Generic;
 
-namespace FiapCloudGames.Domain.Interfaces
+namespace FiapCloudGames.Domain.Interfaces.Repositories
 {
     public interface IGameRepository
     {
-        void Add(Game game);
-        Game? GetById(int id);
-        IEnumerable<Game> GetAll();
         Task<Game?> GetByIdAsync(int id);
         Task<IEnumerable<Game>> GetAllAsync();
         Task<Game> CreateAsync(Game game);

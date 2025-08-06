@@ -1,5 +1,5 @@
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Interfaces;
+using FiapCloudGames.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

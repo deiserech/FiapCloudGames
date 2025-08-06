@@ -7,9 +7,9 @@ using FiapCloudGames.Api.Controllers;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Enums;
-using FiapCloudGames.Domain.Interfaces;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using FiapCloudGames.Domain.Interfaces.Services;
 
 namespace FiapCloudGames.Tests.Controllers
 {

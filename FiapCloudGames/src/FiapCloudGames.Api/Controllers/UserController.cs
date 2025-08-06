@@ -1,10 +1,10 @@
 using System.Security.Claims;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using FiapCloudGames.Domain.Interfaces.Services;
 
 namespace FiapCloudGames.Api.Controllers
 {

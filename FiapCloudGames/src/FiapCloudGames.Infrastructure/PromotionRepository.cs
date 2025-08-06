@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Interfaces;
 using FiapCloudGames.Infrastructure.Data;
+using FiapCloudGames.Domain.Interfaces.Repositories;
 
 namespace FiapCloudGames.Infrastructure
 {
@@ -14,26 +14,12 @@ namespace FiapCloudGames.Infrastructure
             _context = context;
         }
 
-        public async Task<IEnumerable<Promotion>> GetAllAsync()
-        {
-            return await _context.Promotions
-                .Include(p => p.Game)
-                .ToListAsync();
-        }
 
         public async Task<Promotion?> GetByIdAsync(int id)
         {
             return await _context.Promotions
                 .Include(p => p.Game)
                 .FirstOrDefaultAsync(p => p.Id == id);
-        }
-
-        public async Task<IEnumerable<Promotion>> GetByGameIdAsync(int gameId)
-        {
-            return await _context.Promotions
-                .Include(p => p.Game)
-                .Where(p => p.GameId == gameId)
-                .ToListAsync();
         }
 
         public async Task<IEnumerable<Promotion>> GetActivePromotionsAsync()
@@ -82,9 +68,5 @@ namespace FiapCloudGames.Infrastructure
             }
         }
 
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _context.Promotions.AnyAsync(p => p.Id == id);
-        }
     }
 }

@@ -1,13 +1,9 @@
 using FiapCloudGames.Domain.Entities;
 
-namespace FiapCloudGames.Domain.Interfaces
+namespace FiapCloudGames.Domain.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        User? GetById(string id);
-        User? GetByEmail(string email);
-        void Add(User user);
-        bool EmailExists(string email);
         Task<User?> GetByIdAsync(int id);
         Task<User?> GetByEmailAsync(string email);
         Task<IEnumerable<User>> GetAllAsync();

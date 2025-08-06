@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using FiapCloudGames.Api.Controllers;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using FiapCloudGames.Domain.Interfaces.Services;
 
 namespace FiapCloudGames.Tests.Controllers
 {

@@ -3,8 +3,8 @@ using Moq;
 using FluentAssertions;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Interfaces;
 using FiapCloudGames.Domain.Enums;
+using FiapCloudGames.Domain.Interfaces.Repositories;
 
 namespace FiapCloudGames.Tests.Services
 {

@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using FiapCloudGames.Api.Controllers;
 using FiapCloudGames.Domain.DTOs;
-using FiapCloudGames.Domain.Interfaces;
 using FiapCloudGames.Domain.Enums;
 using System;
+using FiapCloudGames.Domain.Interfaces.Services;
 
 namespace FiapCloudGames.Tests.Controllers
 {

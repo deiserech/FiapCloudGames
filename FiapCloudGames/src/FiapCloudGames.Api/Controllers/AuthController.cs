@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.DTOs;
-using FiapCloudGames.Domain.Interfaces;
 using FiapCloudGames.Domain.Utils;
 using System;
+using FiapCloudGames.Domain.Interfaces.Services;
 
 namespace FiapCloudGames.Api.Controllers
 {

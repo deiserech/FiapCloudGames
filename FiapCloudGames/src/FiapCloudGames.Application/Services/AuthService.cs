@@ -3,7 +3,8 @@ using System.Security.Claims;
 using System.Text;
 using FiapCloudGames.Domain.DTOs;
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Interfaces;
+using FiapCloudGames.Domain.Interfaces.Repositories;
+using FiapCloudGames.Domain.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 

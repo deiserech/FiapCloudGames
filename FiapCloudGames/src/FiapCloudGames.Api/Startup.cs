@@ -1,7 +1,8 @@
 using System.Text;
 using FiapCloudGames.Api.Middlewares;
 using FiapCloudGames.Application.Services;
-using FiapCloudGames.Domain.Interfaces;
+using FiapCloudGames.Domain.Interfaces.Repositories;
+using FiapCloudGames.Domain.Interfaces.Services;
 using FiapCloudGames.Infrastructure;
 using FiapCloudGames.Infrastructure.Data;
 using FiapCloudGames.Infrastructure.Repositories;

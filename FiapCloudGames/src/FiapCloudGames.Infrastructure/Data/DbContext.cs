@@ -16,33 +16,28 @@
             {
                 base.OnModelCreating(modelBuilder);
 
-                // Configuração do relacionamento Game -> Promotions
                 modelBuilder.Entity<Promotion>()
                     .HasOne(p => p.Game)
                     .WithMany(g => g.Promotions)
                     .HasForeignKey(p => p.GameId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                // Configuração do relacionamento User -> Library
                 modelBuilder.Entity<Library>()
                     .HasOne(l => l.User)
                     .WithMany(u => u.LibraryGames)
                     .HasForeignKey(l => l.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                // Configuração do relacionamento Game -> Library
                 modelBuilder.Entity<Library>()
                     .HasOne(l => l.Game)
                     .WithMany(g => g.LibraryEntries)
                     .HasForeignKey(l => l.GameId)
-                    .OnDelete(DeleteBehavior.Restrict); // Não permite deletar game se houver compras
+                    .OnDelete(DeleteBehavior.Restrict); 
 
-                // Configuração de índice único para evitar compras duplicadas
                 modelBuilder.Entity<Library>()
                     .HasIndex(l => new { l.UserId, l.GameId })
                     .IsUnique();
 
-                // Configuração de precisão para campos decimais
                 modelBuilder.Entity<Game>()
                     .Property(g => g.Price)
                     .HasPrecision(10, 2);
@@ -54,10 +49,7 @@
                 modelBuilder.Entity<Promotion>()
                     .Property(p => p.DiscountAmount)
                     .HasPrecision(10, 2);
-
-                modelBuilder.Entity<Library>()
-                    .Property(l => l.PurchasePrice)
-                    .HasPrecision(10, 2);
             }
         }
     }
+//TODO: criar arquivo de mapping separado para cada entidade

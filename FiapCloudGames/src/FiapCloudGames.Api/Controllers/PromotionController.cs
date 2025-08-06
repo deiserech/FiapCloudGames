@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using FiapCloudGames.Domain.Interfaces.Services;
 
 namespace FiapCloudGames.Api.Controllers
 {

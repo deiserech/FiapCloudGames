@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Interfaces;
 using FiapCloudGames.Infrastructure.Data;
 using System.Collections.Generic;
 using System.Linq;
+using FiapCloudGames.Domain.Interfaces.Repositories;
 
 namespace FiapCloudGames.Infrastructure.Repositories
 {
@@ -18,24 +18,6 @@ namespace FiapCloudGames.Infrastructure.Repositories
             _context = context;
         }
 
-        // Métodos síncronos (mantidos para compatibilidade)
-        public void Add(Game game)
-        {
-            game.Id = _nextId++;
-            _games.Add(game);
-        }
-
-        public Game? GetById(int id)
-        {
-            return _games.FirstOrDefault(g => g.Id == id);
-        }
-
-        public IEnumerable<Game> GetAll()
-        {
-            return _games;
-        }
-
-        // Métodos assíncronos usando Entity Framework
         public async Task<Game?> GetByIdAsync(int id)
         {
             return await _context.Games
@@ -57,7 +39,6 @@ namespace FiapCloudGames.Infrastructure.Repositories
             _context.Games.Add(game);
             await _context.SaveChangesAsync();
             
-            // Retorna o jogo com as entidades relacionadas incluídas
             return await GetByIdAsync(game.Id) ?? game;
         }
 
@@ -66,8 +47,7 @@ namespace FiapCloudGames.Infrastructure.Repositories
             _context.Entry(game).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             
-            // Retorna o jogo atualizado com as entidades relacionadas incluídas
-            return await GetByIdAsync(game.Id) ?? game;
+           return await GetByIdAsync(game.Id) ?? game;
         }
 
         public async Task DeleteAsync(int id)

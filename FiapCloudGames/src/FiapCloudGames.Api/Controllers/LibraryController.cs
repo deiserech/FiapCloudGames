@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Interfaces;
 using FiapCloudGames.Api.Request;
+using FiapCloudGames.Domain.Interfaces.Services;
 
 namespace FiapCloudGames.Api.Controllers
 {

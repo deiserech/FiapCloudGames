@@ -3,9 +3,9 @@ using Moq;
 using FluentAssertions;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using FiapCloudGames.Domain.Interfaces.Repositories;
 
 namespace FiapCloudGames.Tests.Services
 {
