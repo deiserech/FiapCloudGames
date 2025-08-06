@@ -12,6 +12,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiapCloudGames.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiapCloudGames.Domain", "src\FiapCloudGames.Domain\FiapCloudGames.Domain.csproj", "{74A46DBB-1420-3F75-2095-D32CD2E4531A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Others", "Others", "{691BC223-F304-4D08-AD85-39DC89E84C44}"
+	ProjectSection(SolutionItems) = preProject
+		others\coverage.ps1 = others\coverage.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
