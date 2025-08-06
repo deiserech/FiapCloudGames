@@ -85,38 +85,6 @@ namespace FiapCloudGames.Api.Controllers
         }
 
         /// <summary>
-        /// Verifica se um usuário possui um jogo específico em sua biblioteca
-        /// </summary>
-        /// <param name="userId">ID do usuário</param>
-        /// <param name="gameId">ID do jogo</param>
-        /// <returns>Dados do jogo na biblioteca do usuário</returns>
-        /// <response code="200">Retorna os dados do jogo na biblioteca</response>
-        /// <response code="404">Jogo não encontrado na biblioteca do usuário</response>
-        /// <response code="400">Erro na solicitação</response>
-        /// <response code="401">Não autorizado</response>
-        [HttpGet("user/{userId}/game/{gameId}")]
-        [ProducesResponseType(typeof(Library), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<Library>> GetUserGame(int userId, int gameId)
-        {
-            try
-            {
-                var entry = await _libraryService.GetUserGameAsync(userId, gameId);
-                if (entry == null)
-                {
-                    return NotFound("Jogo não encontrado na biblioteca do usuário.");
-                }
-                return Ok(entry);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        /// <summary>
         /// Realiza a compra de um jogo para um usuário
         /// </summary>
         /// <param name="request">Dados da compra</param>

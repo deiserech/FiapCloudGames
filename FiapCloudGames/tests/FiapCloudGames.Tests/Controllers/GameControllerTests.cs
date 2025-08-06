@@ -36,7 +36,6 @@ namespace FiapCloudGames.Tests.Controllers
                 Title = "Test Game",
                 Description = "A test game description",
                 Price = 59.99m,
-                ReleaseDate = DateTime.Now
             };
 
             _mockGameService.Setup(s => s.CreateGameAsync(It.IsAny<Game>())).Verifiable();

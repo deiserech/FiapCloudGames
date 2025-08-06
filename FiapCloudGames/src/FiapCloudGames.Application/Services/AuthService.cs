@@ -21,9 +21,9 @@ namespace FiapCloudGames.Application.Services
             _configuration = configuration;
         }
 
-        public AuthResponseDto? Login(LoginDto loginDto)
+        public async Task<AuthResponseDto?> Login(LoginDto loginDto)
         {
-            var user = _userRepository.GetByEmail(loginDto.Email);
+            var user = await _userRepository.GetByEmailAsync(loginDto.Email);
 
             if (user == null || !user.VerifyPassword(loginDto.Password))
             {
@@ -41,9 +41,9 @@ namespace FiapCloudGames.Application.Services
             };
         }
 
-        public AuthResponseDto? Register(RegisterDto registerDto)
+        public async Task<AuthResponseDto?> Register(RegisterDto registerDto)
         {
-            if (_userRepository.EmailExists(registerDto.Email))
+            if (await _userRepository.EmailExistsAsync(registerDto.Email))
             {
                 return null;
             }
@@ -57,7 +57,7 @@ namespace FiapCloudGames.Application.Services
 
             user.SetPassword(registerDto.Password);
 
-            _userRepository.Add(user);
+            await _userRepository.CreateAsync(user);
 
             var token = GenerateJwtToken(user);
 

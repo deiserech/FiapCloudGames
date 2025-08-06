@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using FiapCloudGames.Domain.Interfaces.Services;
+using System.Threading.Tasks;
 
 namespace FiapCloudGames.Api.Controllers
 {
@@ -36,10 +37,11 @@ namespace FiapCloudGames.Api.Controllers
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult GetUser(string id)
+        public async Task<IActionResult> GetUser(int id)
         {
-            var user = _service.GetByIdAsync(id);
-            if (user == null) return NotFound();
+            var user = await _service.GetByIdAsync(id);
+            if (user == null) 
+                return NotFound();
 
             return Ok(new
             {
@@ -61,12 +63,13 @@ namespace FiapCloudGames.Api.Controllers
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetProfile()
+        public async Task<IActionResult> GetProfile()
         {
+            //TODO: validar
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            var user = _service.GetByIdAsync(userId);
+            var user = await  _service.GetByIdAsync(int.Parse(userId));
             if (user == null) return NotFound();
 
             return Ok(new
@@ -89,12 +92,12 @@ namespace FiapCloudGames.Api.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult CriarUser([FromBody] User user)
+        public async Task<IActionResult> CriarUser([FromBody] User user)
         {
             if (user == null)
                 return BadRequest("User data is required");
 
-            _service.CreateUserAsync(user);
+            await _service.CreateUserAsync(user);
             return CreatedAtAction(nameof(CriarUser), new { id = user.Id }, new
             {
                 Id = user.Id,

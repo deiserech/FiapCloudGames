@@ -1,7 +1,6 @@
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Interfaces.Repositories;
 using FiapCloudGames.Domain.Interfaces.Services;
-using System.Collections.Generic;
 
 namespace FiapCloudGames.Application.Services
 {
@@ -14,7 +13,7 @@ namespace FiapCloudGames.Application.Services
             _repo = repo;
         }
 
-         public IEnumerable<Game> GetallAsync() => _repo.GetAll();
+         public async Task<IEnumerable<Game>> GetallAsync() => await _repo.GetAllAsync();
 
         public async Task<Game?> GetByIdAsync(int id)
         {
@@ -23,7 +22,6 @@ namespace FiapCloudGames.Application.Services
 
         public async Task<Game> CreateAsync(Game game)
         {
-            // Validações básicas
             if (string.IsNullOrWhiteSpace(game.Title))
             {
                 throw new ArgumentException("O título do jogo é obrigatório.");

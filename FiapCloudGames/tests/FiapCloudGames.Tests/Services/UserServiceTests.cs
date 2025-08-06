@@ -8,12 +8,12 @@ using FiapCloudGames.Domain.Interfaces.Repositories;
 
 namespace FiapCloudGames.Tests.Services
 {
-    public class UserServiceests
+    public class UserServiceTests
     {
         private readonly Mock<IUserRepository> _mockUserRepository;
         private readonly UserService _userService;
 
-        public UserServiceests()
+        public UserServiceTests()
         {
             _mockUserRepository = new Mock<IUserRepository>();
             _userService = new UserService(_mockUserRepository.Object);

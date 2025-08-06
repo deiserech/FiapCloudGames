@@ -4,7 +4,7 @@ namespace FiapCloudGames.Domain.Interfaces.Services
 {
     public interface IAuthService
     {
-        AuthResponseDto? Login(LoginDto loginDto);
-        AuthResponseDto? Register(RegisterDto registerDto);
+        Task<AuthResponseDto?> Login(LoginDto loginDto);
+        Task<AuthResponseDto?> Register(RegisterDto registerDto);
     }
 }

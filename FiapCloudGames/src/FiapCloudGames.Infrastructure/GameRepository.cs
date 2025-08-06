@@ -1,17 +1,13 @@
-using Microsoft.EntityFrameworkCore;
 using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Infrastructure.Data;
-using System.Collections.Generic;
-using System.Linq;
 using FiapCloudGames.Domain.Interfaces.Repositories;
+using FiapCloudGames.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace FiapCloudGames.Infrastructure.Repositories
 {
     public class GameRepository : IGameRepository
     {
         private readonly AppDbContext _context;
-        private static readonly List<Game> _games = new();
-        private static int _nextId = 1;
 
         public GameRepository(AppDbContext context)
         {
@@ -38,7 +34,7 @@ namespace FiapCloudGames.Infrastructure.Repositories
         {
             _context.Games.Add(game);
             await _context.SaveChangesAsync();
-            
+
             return await GetByIdAsync(game.Id) ?? game;
         }
 
@@ -46,8 +42,8 @@ namespace FiapCloudGames.Infrastructure.Repositories
         {
             _context.Entry(game).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            
-           return await GetByIdAsync(game.Id) ?? game;
+
+            return await GetByIdAsync(game.Id) ?? game;
         }
 
         public async Task DeleteAsync(int id)

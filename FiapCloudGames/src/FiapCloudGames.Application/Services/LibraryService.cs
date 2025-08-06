@@ -38,14 +38,8 @@ namespace FiapCloudGames.Application.Services
             return await _libraryRepository.GetByIdAsync(id);
         }
 
-        public async Task<Library?> GetUserGameAsync(int userId, int gameId)
-        {
-            return await _libraryRepository.GetByUserAndGameAsync(userId, gameId);
-        }
-
         public async Task<Library> PurchaseGameAsync(int userId, int gameId, decimal purchasePrice, bool isGift = false, string? giftMessage = null)
         {
-            // Validações
             if (!await _userRepository.ExistsAsync(userId))
             {
                 throw new ArgumentException("Usuário não encontrado.");
@@ -70,10 +64,6 @@ namespace FiapCloudGames.Application.Services
             {
                 UserId = userId,
                 GameId = gameId,
-                PurchaseDate = DateTime.Now,
-                PurchasePrice = purchasePrice,
-                IsGift = isGift,
-                GiftMessage = giftMessage
             };
 
             return await _libraryRepository.CreateAsync(library);

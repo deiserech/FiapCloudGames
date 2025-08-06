@@ -4,7 +4,7 @@ namespace FiapCloudGames.Domain.Interfaces.Services
 {
     public interface IUserService
     {
-        User? GetByIdAsync(string id);
-        void CreateUserAsync(User user);
+        Task<User?> GetByIdAsync(int id);
+        Task CreateUserAsync(User user);
     }
 }

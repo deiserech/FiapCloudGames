@@ -14,8 +14,8 @@ namespace FiapCloudGames.Application.Services
             _repo = repo;
         }
 
-        public User? GetByIdAsync(string id) => _repo.GetById(id);
+        public async Task<User?> GetByIdAsync(int id) => await _repo.GetByIdAsync(id);
 
-        public void CreateUserAsync(User user) => _repo.Add(user);
+        public async Task CreateUserAsync(User user) => await _repo.CreateAsync(user);
     }
 }
