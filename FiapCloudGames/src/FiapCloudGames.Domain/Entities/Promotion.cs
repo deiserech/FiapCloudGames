@@ -14,10 +14,10 @@ namespace FiapCloudGames.Domain.Entities
         [StringLength(1000)]
         public string Description { get; set; } = string.Empty;
 
-        [Range(0.01, 100.00)]
-        public decimal DiscountPercentage { get; set; }
+        [Range(0.00, 100.00)]
+        public decimal? DiscountPercentage { get; set; }
 
-        [Range(0.01, 1000.00)]
+        [Range(0.00, 1000.00)]
         public decimal? DiscountAmount { get; set; }
 
         [Required]
@@ -33,11 +33,11 @@ namespace FiapCloudGames.Domain.Entities
         public int GameId { get; set; }
 
         [JsonIgnore]
-        public Game Game { get; set; } = null!;
+        public Game? Game { get; set; }
 
         public bool IsValidPromotion()
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             return IsActive && now >= StartDate && now <= EndDate;
         }
 
@@ -52,7 +52,7 @@ namespace FiapCloudGames.Domain.Entities
             }
 
             var discountValue = originalPrice * (DiscountPercentage / 100);
-            return Math.Max(0, originalPrice - discountValue);
+            return Math.Max(0, originalPrice - discountValue!.Value);
         }
     }
 }

@@ -58,7 +58,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="200">Jogo encontrado</response>
         /// <response code="404">Jogo não encontrado</response>
         [HttpGet("{id}")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin, User")]
         [ProducesResponseType(typeof(Game), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetGameById(int id)
@@ -74,7 +74,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <returns>Lista de jogos</returns>
         /// <response code="200">Lista de jogos retornada com sucesso</response>
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin, User")]
         [ProducesResponseType(typeof(IEnumerable<Game>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetGames()
         {

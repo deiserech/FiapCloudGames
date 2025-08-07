@@ -24,7 +24,7 @@ namespace FiapCloudGames.Infrastructure
 
         public async Task<IEnumerable<Promotion>> GetActivePromotionsAsync()
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             return await _context.Promotions
                 .Include(p => p.Game)
                 .Where(p => p.IsActive && p.StartDate <= now && p.EndDate >= now)
@@ -33,7 +33,7 @@ namespace FiapCloudGames.Infrastructure
 
         public async Task<IEnumerable<Promotion>> GetActivePromotionsByGameIdAsync(int gameId)
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             return await _context.Promotions
                 .Include(p => p.Game)
                 .Where(p => p.GameId == gameId && p.IsActive && p.StartDate <= now && p.EndDate >= now)

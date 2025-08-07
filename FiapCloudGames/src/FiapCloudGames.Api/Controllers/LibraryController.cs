@@ -32,6 +32,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="400">Erro na solicitação</response>
         /// <response code="401">Não autorizado</response>
         [HttpGet("user/{userId}")]
+        [Authorize(Roles = "Admin, User")]
         [ProducesResponseType(typeof(IEnumerable<Library>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -63,6 +64,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="400">Erro na solicitação</response>
         /// <response code="401">Não autorizado</response>
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, User")]
         [ProducesResponseType(typeof(Library), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

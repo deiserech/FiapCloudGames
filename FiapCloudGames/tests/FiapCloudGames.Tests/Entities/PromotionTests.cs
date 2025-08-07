@@ -15,8 +15,8 @@ namespace FiapCloudGames.Tests.Entities
                 Title = "Promoção de Verão",
                 Description = "Desconto especial para jogos de ação",
                 DiscountPercentage = 20,
-                StartDate = DateTime.Now.AddDays(-1),
-                EndDate = DateTime.Now.AddDays(7),
+                StartDate = DateTime.UtcNow.AddDays(-1),
+                EndDate = DateTime.UtcNow.AddDays(7),
                 IsActive = true,
                 GameId = 1
             };
@@ -38,8 +38,8 @@ namespace FiapCloudGames.Tests.Entities
                 Title = "Promoção Inativa",
                 Description = "Promoção desativada",
                 DiscountPercentage = 20,
-                StartDate = DateTime.Now.AddDays(-1),
-                EndDate = DateTime.Now.AddDays(7),
+                StartDate = DateTime.UtcNow.AddDays(-1),
+                EndDate = DateTime.UtcNow.AddDays(7),
                 IsActive = false,
                 GameId = 1
             };
@@ -61,8 +61,8 @@ namespace FiapCloudGames.Tests.Entities
                 Title = "Promoção Expirada",
                 Description = "Promoção que já passou",
                 DiscountPercentage = 20,
-                StartDate = DateTime.Now.AddDays(-10),
-                EndDate = DateTime.Now.AddDays(-1),
+                StartDate = DateTime.UtcNow.AddDays(-10),
+                EndDate = DateTime.UtcNow.AddDays(-1),
                 IsActive = true,
                 GameId = 1
             };
@@ -85,8 +85,8 @@ namespace FiapCloudGames.Tests.Entities
                 Title = "Desconto de 20%",
                 Description = "Desconto percentual",
                 DiscountPercentage = 20,
-                StartDate = DateTime.Now.AddDays(-1),
-                EndDate = DateTime.Now.AddDays(7),
+                StartDate = DateTime.UtcNow.AddDays(-1),
+                EndDate = DateTime.UtcNow.AddDays(7),
                 IsActive = true,
                 GameId = 1
             };
@@ -110,8 +110,8 @@ namespace FiapCloudGames.Tests.Entities
                 Description = "Desconto fixo",
                 DiscountPercentage = 20, 
                 DiscountAmount = 15m,
-                StartDate = DateTime.Now.AddDays(-1),
-                EndDate = DateTime.Now.AddDays(7),
+                StartDate = DateTime.UtcNow.AddDays(-1),
+                EndDate = DateTime.UtcNow.AddDays(7),
                 IsActive = true,
                 GameId = 1
             };
@@ -134,8 +134,8 @@ namespace FiapCloudGames.Tests.Entities
                 Title = "Promoção Inválida",
                 Description = "Promoção expirada",
                 DiscountPercentage = 20,
-                StartDate = DateTime.Now.AddDays(-10),
-                EndDate = DateTime.Now.AddDays(-1),
+                StartDate = DateTime.UtcNow.AddDays(-10),
+                EndDate = DateTime.UtcNow.AddDays(-1),
                 IsActive = true,
                 GameId = 1
             };
@@ -158,8 +158,8 @@ namespace FiapCloudGames.Tests.Entities
                 Title = "Desconto Maior que Preço",
                 Description = "Desconto que excede o preço",
                 DiscountAmount = 15m,
-                StartDate = DateTime.Now.AddDays(-1),
-                EndDate = DateTime.Now.AddDays(7),
+                StartDate = DateTime.UtcNow.AddDays(-1),
+                EndDate = DateTime.UtcNow.AddDays(7),
                 IsActive = true,
                 GameId = 1
             };

@@ -27,6 +27,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="200">Retorna a lista de promoções ativas</response>
         /// <response code="400">Erro na solicitação</response>
         [HttpGet("active")]
+        [Authorize(Roles = "Admin, User")]
         [ProducesResponseType(typeof(IEnumerable<Promotion>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<Promotion>>> GetActivePromotions()
@@ -51,6 +52,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="404">Promoção não encontrada</response>
         /// <response code="400">Erro na solicitação</response>
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, User")]
         [ProducesResponseType(typeof(Promotion), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -103,6 +105,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="200">Retorna o preço com desconto calculado</response>
         /// <response code="400">Erro na solicitação</response>
         [HttpGet("game/{gameId}/discounted-price")]
+        [Authorize(Roles = "Admin, User")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<decimal>> GetDiscountedPrice(int gameId, [FromQuery] decimal originalPrice)

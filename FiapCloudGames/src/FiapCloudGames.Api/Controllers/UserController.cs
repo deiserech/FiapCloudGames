@@ -31,6 +31,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="404">Usuário não encontrado</response>
         /// <response code="401">Não autorizado</response>
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, User")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -57,6 +58,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="401">Usuário não autenticado</response>
         /// <response code="404">Usuário não encontrado</response>
         [HttpGet("profile")]
+        [Authorize(Roles = "Admin, User")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -67,7 +69,7 @@ namespace FiapCloudGames.Api.Controllers
 
             var user = await _service.GetByIdAsync(int.Parse(userId));
             if (user == null) return NotFound();
-
+            
             return Ok(new
             {
                 Id = user.Id,

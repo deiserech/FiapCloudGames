@@ -57,8 +57,8 @@ namespace FiapCloudGames.Application.Services
 
         public async Task<Promotion> UpdatePromotionAsync(Promotion promotion)
         {
-            var existingPromotion = await _promotionRepository.GetByIdAsync(promotion.Id);
-            if (existingPromotion == null)
+            var existing = await _promotionRepository.GetByIdAsync(promotion.Id);
+            if (existing == null)
             {
                 throw new ArgumentException("Promoção não encontrada.");
             }
@@ -80,7 +80,15 @@ namespace FiapCloudGames.Application.Services
 
             await ValidatePromotionBusinessRules(promotion, promotion.Id);
 
-            return await _promotionRepository.UpdateAsync(promotion);
+            existing.Title = promotion.Title;
+            existing.Description = promotion.Description;
+            existing.DiscountPercentage = promotion.DiscountPercentage;
+            existing.DiscountAmount = promotion.DiscountAmount;
+            existing.StartDate = promotion.StartDate;
+            existing.EndDate = promotion.EndDate;
+            existing.IsActive = promotion.IsActive;
+            existing.GameId = promotion.GameId;
+            return await _promotionRepository.UpdateAsync(existing);
         }
 
         public async Task DeletePromotionAsync(int id)
