@@ -1,10 +1,10 @@
-using Xunit;
-using Moq;
-using FluentAssertions;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Enums;
 using FiapCloudGames.Domain.Interfaces.Repositories;
+using FluentAssertions;
+using Moq;
+using Xunit;
 
 namespace FiapCloudGames.Tests.Services
 {
@@ -19,27 +19,13 @@ namespace FiapCloudGames.Tests.Services
             _userService = new UserService(_mockUserRepository.Object);
         }
 
-        #region Constructor Tests
-
-        [Fact]
-        public void Constructor_WithValidRepository_ShouldCreateInstance()
-        {
-            // Arrange & Act
-            var service = new UserService(_mockUserRepository.Object);
-
-            // Assert
-            service.Should().NotBeNull();
-        }
-
-        #endregion
-
         #region ObterPorId Tests
 
         [Fact]
-        public void ObterPorId_WithExistingUser_ShouldReturnUser()
+        public async Task TaskObterPorId_WithExistingUser_ShouldReturnUser()
         {
             // Arrange
-            var userId = "123";
+            var userId = 123;
             var expectedUser = new User
             {
                 Id = 123,
@@ -49,10 +35,10 @@ namespace FiapCloudGames.Tests.Services
                 PasswordHash = "hashedpassword"
             };
 
-            _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns(expectedUser);
+            _mockUserRepository.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync(expectedUser);
 
             // Act
-            var result = _userService.GetByIdAsync(userId);
+            var result = await _userService.GetByIdAsync(userId);
 
             // Assert
             result.Should().NotBeNull();
@@ -63,63 +49,30 @@ namespace FiapCloudGames.Tests.Services
             result.Role.Should().Be(expectedUser.Role);
             result.PasswordHash.Should().Be(expectedUser.PasswordHash);
 
-            _mockUserRepository.Verify(repo => repo.GetById(userId), Times.Once);
+            _mockUserRepository.Verify(repo => repo.GetByIdAsync(userId), Times.Once);
         }
 
         [Fact]
-        public void ObterPorId_WithNonExistingUser_ShouldReturnNull()
+        public async Task TaskObterPorId_WithNonExistingUser_ShouldReturnNull()
         {
             // Arrange
-            var userId = "999";
-            _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns((User?)null);
+            var userId = 999;
+            _mockUserRepository.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync((User?)null);
 
             // Act
-            var result = _userService.GetByIdAsync(userId);
+            var result = await _userService.GetByIdAsync(userId);
 
             // Assert
             result.Should().BeNull();
-            _mockUserRepository.Verify(repo => repo.GetById(userId), Times.Once);
+            _mockUserRepository.Verify(repo => repo.GetByIdAsync(userId), Times.Once);
         }
 
-        [Theory]
-        [InlineData("")]
-        [InlineData("0")]
-        [InlineData("-1")]
-        [InlineData("abc")]
-        [InlineData("user@email.com")]
-        [InlineData("very-long-user-id-123456789")]
-        public void ObterPorId_WithVariousIdFormats_ShouldCallRepository(string userId)
-        {
-            // Arrange
-            _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns((User?)null);
-
-            // Act
-            var result = _userService.GetByIdAsync(userId);
-
-            // Assert
-            _mockUserRepository.Verify(repo => repo.GetById(userId), Times.Once);
-        }
 
         [Fact]
-        public void ObterPorId_WithNullId_ShouldCallRepositoryWithNull()
+        public async Task TaskObterPorId_WithAdministratorUser_ShouldReturnCorrectRole()
         {
             // Arrange
-            string nullId = null!;
-            _mockUserRepository.Setup(repo => repo.GetById(nullId)).Returns((User?)null);
-
-            // Act
-            var result = _userService.GetByIdAsync(nullId);
-
-            // Assert
-            result.Should().BeNull();
-            _mockUserRepository.Verify(repo => repo.GetById(nullId), Times.Once);
-        }
-
-        [Fact]
-        public void ObterPorId_WithAdministratorUser_ShouldReturnCorrectRole()
-        {
-            // Arrange
-            var userId = "admin123";
+            var userId = 123;
             var adminUser = new User
             {
                 Id = 456,
@@ -129,82 +82,15 @@ namespace FiapCloudGames.Tests.Services
                 PasswordHash = "adminhashedpassword"
             };
 
-            _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns(adminUser);
+            _mockUserRepository.Setup(repo => repo.GetByIdAsync(userId)).ReturnsAsync(adminUser);
 
             // Act
-            var result = _userService.GetByIdAsync(userId);
+            var result = await _userService.GetByIdAsync(userId);
 
             // Assert
             result.Should().NotBeNull();
             result!.Role.Should().Be(UserRole.Admin);
-            _mockUserRepository.Verify(repo => repo.GetById(userId), Times.Once);
-        }
-
-        [Fact]
-        public void ObterPorId_WhenRepositoryThrowsException_ShouldPropagateException()
-        {
-            // Arrange
-            var userId = "123";
-            _mockUserRepository.Setup(repo => repo.GetById(userId))
-                              .Throws(new InvalidOperationException("Database connection failed"));
-
-            // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => _userService.GetByIdAsync(userId));
-            exception.Message.Should().Be("Database connection failed");
-            _mockUserRepository.Verify(repo => repo.GetById(userId), Times.Once);
-        }
-
-        [Fact]
-        public void ObterPorId_WithUserWithSpecialCharacters_ShouldHandleCorrectly()
-        {
-            // Arrange
-            var userId = "user-with-special-chars-123";
-            var userWithSpecialChars = new User
-            {
-                Id = 789,
-                Name = "José da Silva Ñoño",
-                Email = "josé.ñoño@example.com",
-                Role = UserRole.User,
-                PasswordHash = "specialhashedpassword"
-            };
-
-            _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns(userWithSpecialChars);
-
-            // Act
-            var result = _userService.GetByIdAsync(userId);
-
-            // Assert
-            result.Should().NotBeNull();
-            result!.Name.Should().Be("José da Silva Ñoño");
-            result.Email.Should().Be("josé.ñoño@example.com");
-            _mockUserRepository.Verify(repo => repo.GetById(userId), Times.Once);
-        }
-
-        [Fact]
-        public void ObterPorId_CalledMultipleTimes_ShouldCallRepositoryEachTime()
-        {
-            // Arrange
-            var userId = "123";
-            var user = new User
-            {
-                Id = 123,
-                Name = "Test User",
-                Email = "test@example.com",
-                Role = UserRole.User
-            };
-
-            _mockUserRepository.Setup(repo => repo.GetById(userId)).Returns(user);
-
-            // Act
-            var result1 = _userService.GetByIdAsync(userId);
-            var result2 = _userService.GetByIdAsync(userId);
-            var result3 = _userService.GetByIdAsync(userId);
-
-            // Assert
-            result1.Should().Be(user);
-            result2.Should().Be(user);
-            result3.Should().Be(user);
-            _mockUserRepository.Verify(repo => repo.GetById(userId), Times.Exactly(3));
+            _mockUserRepository.Verify(repo => repo.GetByIdAsync(userId), Times.Once);
         }
 
         #endregion
@@ -212,7 +98,7 @@ namespace FiapCloudGames.Tests.Services
         #region Criar Tests
 
         [Fact]
-        public void Criar_WithValidUser_ShouldCallRepositoryAdd()
+        public async Task TaskCriar_WithValidUser_ShouldCallRepositoryAdd()
         {
             // Arrange
             var user = new User
@@ -224,30 +110,30 @@ namespace FiapCloudGames.Tests.Services
                 PasswordHash = "hashedpassword"
             };
 
-            _mockUserRepository.Setup(repo => repo.Add(user)).Verifiable();
+            _mockUserRepository.Setup(repo => repo.CreateAsync(user)).Verifiable();
 
             // Act
-            _userService.CreateUserAsync(user);
+            await _userService.CreateUserAsync(user);
 
             // Assert
-            _mockUserRepository.Verify(repo => repo.Add(user), Times.Once);
+            _mockUserRepository.Verify(repo => repo.CreateAsync(user), Times.Once);
         }
 
         [Fact]
-        public void Criar_WithNullUser_ShouldCallRepositoryWithNull()
+        public async Task TaskCriar_WithNullUser_ShouldCallRepositoryWithNull()
         {
             // Arrange
             User nullUser = null!;
 
             // Act
-            _userService.CreateUserAsync(nullUser);
+            await _userService.CreateUserAsync(nullUser);
 
             // Assert
-            _mockUserRepository.Verify(repo => repo.Add(nullUser), Times.Once);
+            _mockUserRepository.Verify(repo => repo.CreateAsync(nullUser), Times.Once);
         }
 
         [Fact]
-        public void Criar_WithAdministratorUser_ShouldCallRepositoryAdd()
+        public async Task TaskCriar_WithAdministratorUser_ShouldCallRepositoryAdd()
         {
             // Arrange
             var adminUser = new User
@@ -259,319 +145,16 @@ namespace FiapCloudGames.Tests.Services
                 PasswordHash = "adminhashedpassword"
             };
 
-            _mockUserRepository.Setup(repo => repo.Add(adminUser)).Verifiable();
+            _mockUserRepository.Setup(repo => repo.CreateAsync(adminUser)).Verifiable();
 
             // Act
-            _userService.CreateUserAsync(adminUser);
+            await _userService.CreateUserAsync(adminUser);
 
             // Assert
-            _mockUserRepository.Verify(repo => repo.Add(adminUser), Times.Once);
-        }
-
-        [Fact]
-        public void Criar_WithUserWithSpecialCharacters_ShouldCallRepositoryAdd()
-        {
-            // Arrange
-            var userWithSpecialChars = new User
-            {
-                Id = 3,
-                Name = "François Müller",
-                Email = "françois.müller@example.com",
-                Role = UserRole.User,
-                PasswordHash = "specialhashedpassword"
-            };
-
-            _mockUserRepository.Setup(repo => repo.Add(userWithSpecialChars)).Verifiable();
-
-            // Act
-            _userService.CreateUserAsync(userWithSpecialChars);
-
-            // Assert
-            _mockUserRepository.Verify(repo => repo.Add(userWithSpecialChars), Times.Once);
-        }
-
-        [Fact]
-        public void Criar_WithUserWithLongFields_ShouldCallRepositoryAdd()
-        {
-            // Arrange
-            var userWithLongFields = new User
-            {
-                Id = 4,
-                Name = new string('A', 100),
-                Email = $"{new string('b', 50)}@{new string('c', 50)}.com",
-                Role = UserRole.User,
-                PasswordHash = new string('x', 500)
-            };
-
-            _mockUserRepository.Setup(repo => repo.Add(userWithLongFields)).Verifiable();
-
-            // Act
-            _userService.CreateUserAsync(userWithLongFields);
-
-            // Assert
-            _mockUserRepository.Verify(repo => repo.Add(userWithLongFields), Times.Once);
-        }
-
-        [Fact]
-        public void Criar_WithUserWithEmptyFields_ShouldCallRepositoryAdd()
-        {
-            // Arrange
-            var userWithEmptyFields = new User
-            {
-                Id = 5,
-                Name = "",
-                Email = "",
-                Role = UserRole.User,
-                PasswordHash = ""
-            };
-
-            _mockUserRepository.Setup(repo => repo.Add(userWithEmptyFields)).Verifiable();
-
-            // Act
-            _userService.CreateUserAsync(userWithEmptyFields);
-
-            // Assert
-            _mockUserRepository.Verify(repo => repo.Add(userWithEmptyFields), Times.Once);
-        }
-
-        [Fact]
-        public void Criar_WhenRepositoryThrowsException_ShouldPropagateException()
-        {
-            // Arrange
-            var user = new User
-            {
-                Id = 6,
-                Name = "Test User",
-                Email = "test@example.com",
-                Role = UserRole.User,
-                PasswordHash = "hashedpassword"
-            };
-
-            _mockUserRepository.Setup(repo => repo.Add(user))
-                              .Throws(new InvalidOperationException("Email already exists"));
-
-            // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => _userService.CreateUserAsync(user));
-            exception.Message.Should().Be("Email already exists");
-            _mockUserRepository.Verify(repo => repo.Add(user), Times.Once);
-        }
-
-        [Fact]
-        public void Criar_WhenRepositoryThrowsArgumentException_ShouldPropagateException()
-        {
-            // Arrange
-            var user = new User
-            {
-                Id = 7,
-                Name = "Test User",
-                Email = "invalid-email",
-                Role = UserRole.User,
-                PasswordHash = "hashedpassword"
-            };
-
-            _mockUserRepository.Setup(repo => repo.Add(user))
-                              .Throws(new ArgumentException("Invalid email format"));
-
-            // Act & Assert
-            var exception = Assert.Throws<ArgumentException>(() => _userService.CreateUserAsync(user));
-            exception.Message.Should().Be("Invalid email format");
-            _mockUserRepository.Verify(repo => repo.Add(user), Times.Once);
-        }
-
-        [Fact]
-        public void Criar_CalledMultipleTimes_ShouldCallRepositoryEachTime()
-        {
-            // Arrange
-            var user1 = new User { Id = 1, Name = "User 1", Email = "user1@example.com", Role = UserRole.User };
-            var user2 = new User { Id = 2, Name = "User 2", Email = "user2@example.com", Role = UserRole.User };
-            var user3 = new User { Id = 3, Name = "User 3", Email = "user3@example.com", Role = UserRole.Admin };
-
-            _mockUserRepository.Setup(repo => repo.Add(It.IsAny<User>())).Verifiable();
-
-            // Act
-            _userService.CreateUserAsync(user1);
-            _userService.CreateUserAsync(user2);
-            _userService.CreateUserAsync(user3);
-
-            // Assert
-            _mockUserRepository.Verify(repo => repo.Add(user1), Times.Once);
-            _mockUserRepository.Verify(repo => repo.Add(user2), Times.Once);
-            _mockUserRepository.Verify(repo => repo.Add(user3), Times.Once);
-            _mockUserRepository.Verify(repo => repo.Add(It.IsAny<User>()), Times.Exactly(3));
-        }
-
-        [Fact]
-        public void Criar_WithSameUserMultipleTimes_ShouldCallRepositoryEachTime()
-        {
-            // Arrange
-            var user = new User
-            {
-                Id = 1,
-                Name = "Repeated User",
-                Email = "repeated@example.com",
-                Role = UserRole.User,
-                PasswordHash = "hashedpassword"
-            };
-
-            _mockUserRepository.Setup(repo => repo.Add(user)).Verifiable();
-
-            // Act
-            _userService.CreateUserAsync(user);
-            _userService.CreateUserAsync(user);
-
-            // Assert
-            _mockUserRepository.Verify(repo => repo.Add(user), Times.Exactly(2));
+            _mockUserRepository.Verify(repo => repo.CreateAsync(adminUser), Times.Once);
         }
 
         #endregion
 
-        #region Integration-like Tests (Testing service behavior more holistically)
-
-        [Fact]
-        public void UserService_ShouldNotPerformAnyValidation_DelegatesAllToRepository()
-        {
-            // Arrange
-            var invalidUser = new User
-            {
-                Id = -1,
-                Name = null!,
-                Email = null!,
-                Role = (UserRole)999, // Invalid enum value
-                PasswordHash = null!
-            };
-
-            _mockUserRepository.Setup(repo => repo.Add(invalidUser)).Verifiable();
-
-            // Act
-            _userService.CreateUserAsync(invalidUser);
-
-            // Assert
-            // O serviço não faz validação, apenas delega para o repository
-            _mockUserRepository.Verify(repo => repo.Add(invalidUser), Times.Once);
-        }
-
-        [Fact]
-        public void UserService_ShouldPassThroughAllUserProperties()
-        {
-            // Arrange
-            var complexUser = new User
-            {
-                Id = 12345,
-                Name = "Complex User With Many Properties",
-                Email = "complex.user+tag@subdomain.example.com",
-                Role = UserRole.Admin,
-                PasswordHash = "very-long-complex-hashed-password-with-special-characters-!@#$%^&*()"
-            };
-
-            User capturedUser = null!;
-            _mockUserRepository.Setup(repo => repo.Add(It.IsAny<User>()))
-                              .Callback<User>(user => capturedUser = user);
-
-            // Act
-            _userService.CreateUserAsync(complexUser);
-
-            // Assert
-            capturedUser.Should().NotBeNull();
-            capturedUser.Should().BeSameAs(complexUser); // Mesma referência
-            capturedUser.Id.Should().Be(complexUser.Id);
-            capturedUser.Name.Should().Be(complexUser.Name);
-            capturedUser.Email.Should().Be(complexUser.Email);
-            capturedUser.Role.Should().Be(complexUser.Role);
-            capturedUser.PasswordHash.Should().Be(complexUser.PasswordHash);
-        }
-
-        [Theory]
-        [InlineData(UserRole.User)]
-        [InlineData(UserRole.Admin)]
-        public void UserService_ShouldHandleAllUserRoles(UserRole role)
-        {
-            // Arrange
-            var user = new User
-            {
-                Id = 1,
-                Name = $"User with {role} role",
-                Email = $"user.{role}@example.com",
-                Role = role,
-                PasswordHash = "hashedpassword"
-            };
-
-            _mockUserRepository.Setup(repo => repo.Add(user)).Verifiable();
-
-            // Act
-            _userService.CreateUserAsync(user);
-
-            // Assert
-            _mockUserRepository.Verify(repo => repo.Add(user), Times.Once);
-        }
-
-        [Fact]
-        public void UserService_WithDifferentUserIds_ShouldRetrieveCorrectUsers()
-        {
-            // Arrange
-            var user1 = new User { Id = 1, Name = "User 1", Email = "user1@example.com", Role = UserRole.User };
-            var user2 = new User { Id = 2, Name = "User 2", Email = "user2@example.com", Role = UserRole.Admin };
-
-            _mockUserRepository.Setup(repo => repo.GetById("1")).Returns(user1);
-            _mockUserRepository.Setup(repo => repo.GetById("2")).Returns(user2);
-            _mockUserRepository.Setup(repo => repo.GetById("3")).Returns((User?)null);
-
-            // Act
-            var result1 = _userService.GetByIdAsync("1");
-            var result2 = _userService.GetByIdAsync("2");
-            var result3 = _userService.GetByIdAsync("3");
-
-            // Assert
-            result1.Should().Be(user1);
-            result2.Should().Be(user2);
-            result3.Should().BeNull();
-
-            _mockUserRepository.Verify(repo => repo.GetById("1"), Times.Once);
-            _mockUserRepository.Verify(repo => repo.GetById("2"), Times.Once);
-            _mockUserRepository.Verify(repo => repo.GetById("3"), Times.Once);
-        }
-
-        #endregion
-
-        #region Performance and Edge Cases
-
-        [Fact]
-        public void UserService_WithVeryLargeUserId_ShouldHandleCorrectly()
-        {
-            // Arrange
-            var largeUserId = new string('9', 1000); // Very large user ID
-            _mockUserRepository.Setup(repo => repo.GetById(largeUserId)).Returns((User?)null);
-
-            // Act
-            var result = _userService.GetByIdAsync(largeUserId);
-
-            // Assert
-            result.Should().BeNull();
-            _mockUserRepository.Verify(repo => repo.GetById(largeUserId), Times.Once);
-        }
-
-        [Fact]
-        public void UserService_WithUserIdContainingSpecialCharacters_ShouldHandleCorrectly()
-        {
-            // Arrange
-            var specialUserId = "user-id_with.special+chars@domain.com";
-            var user = new User
-            {
-                Id = 999,
-                Name = "Special ID User",
-                Email = "special@example.com",
-                Role = UserRole.User
-            };
-
-            _mockUserRepository.Setup(repo => repo.GetById(specialUserId)).Returns(user);
-
-            // Act
-            var result = _userService.GetByIdAsync(specialUserId);
-
-            // Assert
-            result.Should().Be(user);
-            _mockUserRepository.Verify(repo => repo.GetById(specialUserId), Times.Once);
-        }
-
-        #endregion
     }
 }

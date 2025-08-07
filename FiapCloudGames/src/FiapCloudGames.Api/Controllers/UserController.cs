@@ -92,13 +92,13 @@ namespace FiapCloudGames.Api.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CriarUser([FromBody] User user)
+        public async Task<IActionResult> CreateUser([FromBody] User user)
         {
             if (user == null)
                 return BadRequest("User data is required");
 
             await _service.CreateUserAsync(user);
-            return CreatedAtAction(nameof(CriarUser), new { id = user.Id }, new
+            return CreatedAtAction(nameof(CreateUser), new { id = user.Id }, new
             {
                 Id = user.Id,
                 Name = user.Name,

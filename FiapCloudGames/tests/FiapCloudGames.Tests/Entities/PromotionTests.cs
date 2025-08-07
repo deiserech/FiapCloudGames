@@ -108,7 +108,7 @@ namespace FiapCloudGames.Tests.Entities
                 Id = 1,
                 Title = "Desconto de R$ 15",
                 Description = "Desconto fixo",
-                DiscountPercentage = 20, // Será ignorado quando DiscountAmount é especificado
+                DiscountPercentage = 20, 
                 DiscountAmount = 15m,
                 StartDate = DateTime.Now.AddDays(-1),
                 EndDate = DateTime.Now.AddDays(7),

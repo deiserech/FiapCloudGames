@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.DTOs;
-using FiapCloudGames.Domain.Utils;
-using System;
 using FiapCloudGames.Domain.Interfaces.Services;
+using FiapCloudGames.Domain.Utils;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FiapCloudGames.Api.Controllers
 {
@@ -34,14 +32,14 @@ namespace FiapCloudGames.Api.Controllers
         [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult Login([FromBody] LoginDto loginDto)
+       public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = _authService.Login(loginDto);
+            var result = await _authService.Login(loginDto);
             
             if (result == null)
             {
@@ -61,24 +59,24 @@ namespace FiapCloudGames.Api.Controllers
         [HttpPost("register")]
         [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Register([FromBody] RegisterDto registerDto)
+       public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            var passwordErrors = ValidationHelper.ValidatePassword(registerDto.Password);
-            if (passwordErrors.Any())
+ 
+            var errors = ValidationHelper.ValidateRegisterEntries(registerDto.Password, registerDto.Email);
+            if (errors.Any())
             {
-                foreach (var error in passwordErrors)
+                foreach (var error in errors)
                 {
-                    ModelState.AddModelError("Password", error);
+                    ModelState.AddModelError("RegisterDto", error);
                 }
                 return BadRequest(ModelState);
             }
 
-            var result = _authService.Register(registerDto);
+            var result = await _authService.Register(registerDto);
             
             if (result == null)
             {

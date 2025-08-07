@@ -8,9 +8,24 @@ namespace FiapCloudGames.Domain.Utils
             @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Regex PasswordRegex = new Regex(
-            @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#+\-_.=])[A-Za-z\d@$!%*?&#+\-_.=]{8,}$",
-            RegexOptions.Compiled);
+        public static List<string> ValidateRegisterEntries(string password, string email)
+        {
+            var errors = new List<string>();
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                errors.Add("O email é obrigatório.");
+            }
+            else if (!IsValidEmail(email))
+            {
+                errors.Add("O email fornecido não é válido.");
+            }
+            var passwordErrors = ValidatePassword(password);
+            if (passwordErrors.Count > 0)
+            {
+                errors.AddRange(passwordErrors);
+            }
+            return errors;
+        }
 
         public static bool IsValidEmail(string email)
         {
@@ -18,20 +33,6 @@ namespace FiapCloudGames.Domain.Utils
                 return false;
 
             return EmailRegex.IsMatch(email);
-        }
-
-        public static bool IsValidPassword(string password)
-        {
-            if (string.IsNullOrWhiteSpace(password))
-                return false;
-
-            return PasswordRegex.IsMatch(password);
-        }
-
-        public static string GetPasswordRequirements()
-        {
-            return "A senha deve ter no mínimo 8 caracteres, incluindo pelo menos: " +
-                   "uma letra minúscula, uma maiúscula, um número e um caractere especial (@$!%*?&#+\\-_.=).";
         }
 
         public static List<string> ValidatePassword(string password)

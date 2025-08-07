@@ -38,7 +38,7 @@ namespace FiapCloudGames.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public IActionResult CreateGame([FromBody] Game game)
+        public async Task<IActionResult> CreateGame([FromBody] Game game)
         {
             if (game == null)
                 return BadRequest("Game data is required");
@@ -46,7 +46,7 @@ namespace FiapCloudGames.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _service.CreateAsync(game);
+            await _service.CreateAsync(game);
             return CreatedAtAction(nameof(CreateGame), new { id = game.Id }, game);
         }
 
@@ -61,9 +61,9 @@ namespace FiapCloudGames.Api.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(Game), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetGameById(int id)
+        public async Task<IActionResult> GetGameById(int id)
         {
-            var game = _service.GetByIdAsync(id);
+            var game = await _service.GetByIdAsync(id);
             if (game == null) return NotFound();
             return Ok(game);
         }
@@ -76,9 +76,9 @@ namespace FiapCloudGames.Api.Controllers
         [HttpGet]
         [AllowAnonymous]
         [ProducesResponseType(typeof(IEnumerable<Game>), StatusCodes.Status200OK)]
-        public IActionResult GetGames()
+        public async Task<IActionResult> GetGames()
         {
-            return Ok(_service.GetallAsync());
+            return Ok(await _service.GetallAsync());
         }
     }
 }
