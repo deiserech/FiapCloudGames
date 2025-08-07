@@ -9,6 +9,9 @@ namespace FiapCloudGames.Application.Services
         private readonly IPromotionRepository _promotionRepository;
         private readonly IGameRepository _gameRepository;
 
+        private const int MaximumPromotionDurationDays = 30;
+        private const int MaxActivePromotionsPerGame = 3;
+
         public PromotionService(IPromotionRepository promotionRepository, IGameRepository gameRepository)
         {
             _promotionRepository = promotionRepository;
@@ -32,7 +35,6 @@ namespace FiapCloudGames.Application.Services
 
         public async Task<Promotion> CreatePromotionAsync(Promotion promotion)
         {
-            // Validações
             if (promotion.StartDate >= promotion.EndDate)
             {
                 throw new ArgumentException("A data de início deve ser anterior à data de fim.");
@@ -47,6 +49,8 @@ namespace FiapCloudGames.Application.Services
             {
                 throw new ArgumentException("Deve ser especificado um desconto percentual ou um valor de desconto.");
             }
+
+            await ValidatePromotionBusinessRules(promotion);
 
             return await _promotionRepository.CreateAsync(promotion);
         }
@@ -59,7 +63,6 @@ namespace FiapCloudGames.Application.Services
                 throw new ArgumentException("Promoção não encontrada.");
             }
 
-            // Validações
             if (promotion.StartDate >= promotion.EndDate)
             {
                 throw new ArgumentException("A data de início deve ser anterior à data de fim.");
@@ -74,6 +77,8 @@ namespace FiapCloudGames.Application.Services
             {
                 throw new ArgumentException("Deve ser especificado um desconto percentual ou um valor de desconto.");
             }
+
+            await ValidatePromotionBusinessRules(promotion, promotion.Id);
 
             return await _promotionRepository.UpdateAsync(promotion);
         }
@@ -109,7 +114,6 @@ namespace FiapCloudGames.Application.Services
                 return null;
             }
 
-            // Para determinar a melhor promoção, vamos usar o jogo para obter o preço original
             var game = await _gameRepository.GetByIdAsync(gameId);
             if (game == null)
             {
@@ -118,10 +122,51 @@ namespace FiapCloudGames.Application.Services
 
             var originalPrice = game.Price;
 
-            // Encontra a promoção que oferece o maior desconto
             return activePromotions
                 .OrderBy(p => p.CalculateDiscountedPrice(originalPrice))
                 .FirstOrDefault();
+        }
+
+        private async Task ValidatePromotionBusinessRules(Promotion promotion, int? excludePromotionId = null)
+        {
+            ValidatePromotionDuration(promotion);
+
+            ValidatePromotionStartDate(promotion);
+
+            await ValidateActivePromotionsLimit(promotion.GameId, excludePromotionId);
+        }
+
+        private static void ValidatePromotionDuration(Promotion promotion)
+        {
+            var duration = promotion.EndDate - promotion.StartDate;
+            var durationDays = (int)duration.TotalDays;
+
+            if (durationDays > MaximumPromotionDurationDays)
+            {
+                throw new ArgumentException($"A duração da promoção não pode exceder {MaximumPromotionDurationDays} dias.");
+            }
+        }
+
+
+        private static void ValidatePromotionStartDate(Promotion promotion)
+        {
+            var today = DateTime.Today;
+            if (promotion.StartDate.Date < today)
+            {
+                throw new ArgumentException("A data de início da promoção não pode ser no passado.");
+            }
+        }
+
+        private async Task ValidateActivePromotionsLimit(int gameId, int? excludePromotionId)
+        {
+            var activePromotions = await GetActivePromotionsByGameIdAsync(gameId);
+
+             var activeCount = activePromotions.Count();
+
+            if (activeCount >= MaxActivePromotionsPerGame)
+            {
+                throw new InvalidOperationException($"O jogo já possui o limite máximo de {MaxActivePromotionsPerGame} promoção(ões) ativa(s). Desative uma promoção existente antes de criar uma nova.");
+            }
         }
     }
 }
