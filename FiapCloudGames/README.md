@@ -1,112 +1,211 @@
-### Step 1: Set Up Your Development Environment
+# 🎮 FIAP Cloud Games
 
-1. **Install .NET SDK**: Make sure you have the .NET SDK installed on your machine. You can download it from the [.NET website](https://dotnet.microsoft.com/download).
+## 📝 Sobre o Projeto
 
-2. **IDE**: Install an Integrated Development Environment (IDE) such as Visual Studio, Visual Studio Code, or JetBrains Rider.
+O **FIAP Cloud Games** é uma plataforma de jogos digitais desenvolvida como parte do TchChallenge (TC) da FIAP. A aplicação oferece um sistema completo para gerenciamento de jogos, biblioteca pessoal de usuários, promoções e autenticação segura.
 
-### Step 2: Create a New Project
+### 🎯 Objetivos
 
-1. **Open Command Line or Terminal**:
-   - You can use Command Prompt, PowerShell, or Terminal.
+- **Gerenciamento de Jogos**: Cadastro, consulta e gerenciamento de catálogo de jogos
+- **Biblioteca Pessoal**: Sistema para usuários organizarem sua coleção de jogos
+- **Sistema de Promoções**: Gestão de ofertas e descontos especiais
+- **Autenticação Segura**: Sistema de login/registro com JWT
+- **API RESTful**: Interface moderna e escalável para integração
 
-2. **Create a New Project**:
-   - Navigate to the directory where you want to create your project.
-   - Use the following command to create a new project. Replace `ProjectName` with the desired name of your project and choose the appropriate template (e.g., `console`, `web`, `mvc`, etc.) based on the specifications in your document.
+## 🏗️ Arquitetura
 
+O projeto está organizado em camadas:
+
+```
+📁 FiapCloudGames/
+├── 🌐 FiapCloudGames.Api/          # Camada de apresentação (Controllers, Middlewares)
+├── ⚙️ FiapCloudGames.Application/   # Camada de aplicação (Services, Use Cases)
+├── 🏛️ FiapCloudGames.Domain/        # Camada de domínio (Entities, DTOs, Interfaces)
+├── 🔧 FiapCloudGames.Infrastructure/ # Camada de infraestrutura (Repositories, Data)
+└── 🧪 FiapCloudGames.Tests/        # Testes unitários e de integração
+```
+
+### 🛠️ Tecnologias Utilizadas
+
+- **.NET 8.0**: Framework principal
+- **ASP.NET Core Web API**: Para criação da API REST
+- **Entity Framework Core**: ORM para acesso a dados
+- **SQL Server**: Banco de dados relacional
+- **JWT (JSON Web Tokens)**: Autenticação e autorização
+- **Swagger/OpenAPI**: Documentação da API
+- **xUnit**: Framework de testes
+
+## 🚀 Como Executar
+
+### 📋 Pré-requisitos
+
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [SQL Server](https://www.microsoft.com/sql-server/sql-server-downloads) ou [SQL Server Express](https://www.microsoft.com/sql-server/sql-server-downloads)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) ou [Visual Studio Code](https://code.visualstudio.com/)
+
+### ⚡ Instalação e Configuração
+
+1. **Clone o repositório**
    ```bash
-   dotnet new console -n ProjectName
+   git clone https://github.com/deiserech/FiapCloudGames.git
+   cd FiapCloudGames
    ```
 
-   or for a web application:
-
+2. **Restaure as dependências**
    ```bash
-   dotnet new webapp -n ProjectName
+   dotnet restore
    ```
 
-3. **Navigate to the Project Directory**:
-   ```bash
-   cd ProjectName
+3. **Configure a string de conexão**
+   
+   Edite o arquivo `src/FiapCloudGames.Api/appsettings.json`:
+   ```json
+   {
+     "ConnectionStrings": {
+       "DefaultConnection": "Server=localhost;Database=FiapCloudGamesDb;Trusted_Connection=True;TrustServerCertificate=True;"
+     }
+   }
    ```
 
-### Step 3: Implement Project Specifications
-
-1. **Review the Specifications**: Open the "TC NETT - Fase 1" document and review the requirements, such as:
-   - Project structure
-   - Required libraries or frameworks
-   - Database connections
-   - API endpoints
-   - User interface requirements
-
-2. **Add Necessary Packages**: Based on the specifications, you may need to add NuGet packages. For example, if you need Entity Framework Core for database access, you can add it using:
-
+4. **Execute as migrações do banco de dados**
    ```bash
-   dotnet add package Microsoft.EntityFrameworkCore
+   cd src/FiapCloudGames.Api
+   dotnet ef database update
    ```
 
-3. **Create Project Structure**: Organize your project files and folders according to the specifications. This might include creating folders for Models, Views, Controllers, Services, etc.
-
-4. **Implement Features**: Start coding the features as per the requirements. This could involve:
-   - Creating models for data representation.
-   - Setting up a database context if using Entity Framework.
-   - Implementing business logic in services.
-   - Creating controllers for handling requests (if it's a web application).
-   - Designing views (if applicable).
-
-### Step 4: Testing
-
-1. **Write Unit Tests**: If the specifications include testing requirements, create a test project and write unit tests for your code.
-
-   ```bash
-   dotnet new xunit -n ProjectName.Tests
-   ```
-
-2. **Run Tests**: Use the following command to run your tests:
-
-   ```bash
-   dotnet test
-   ```
-
-### Step 5: Build and Run the Project
-
-1. **Build the Project**: Use the following command to build your project:
-
-   ```bash
-   dotnet build
-   ```
-
-2. **Run the Project**: If it's a console application, run:
-
+5. **Execute a aplicação**
    ```bash
    dotnet run
    ```
 
-   For a web application, you can also run:
+6. **Acesse a documentação da API**
+   
+   Abra seu navegador e vá para: `https://localhost:5001/swagger`
 
-   ```bash
-   dotnet run
-   ```
+## 📚 Endpoints da API
 
-### Step 6: Version Control
+### 🔐 Autenticação
+- `POST /api/auth/register` - Registrar novo usuário
+- `POST /api/auth/login` - Fazer login
 
-1. **Initialize Git**: If you are using version control, initialize a Git repository:
+### 🎮 Jogos
+- `GET /api/games` - Listar todos os jogos
+- `GET /api/games/{id}` - Obter jogo por ID
+- `POST /api/games` - Criar novo jogo
+- `PUT /api/games/{id}` - Atualizar jogo
+- `DELETE /api/games/{id}` - Remover jogo
 
-   ```bash
-   git init
-   ```
+### 📚 Biblioteca
+- `GET /api/library` - Obter biblioteca do usuário
+- `POST /api/library/purchase` - Comprar jogo
 
-2. **Commit Your Changes**: Add and commit your changes regularly.
+### 🏷️ Promoções
+- `GET /api/promotions` - Listar promoções ativas
+- `POST /api/promotions` - Criar nova promoção
 
-   ```bash
-   git add .
-   git commit -m "Initial commit"
-   ```
+### 👤 Usuários
+- `GET /api/users/profile` - Obter perfil do usuário
+- `PUT /api/users/profile` - Atualizar perfil
 
-### Step 7: Documentation
+## 🧪 Executando os Testes
 
-1. **Document Your Code**: Ensure that you have comments and documentation for your code to make it easier for others (or yourself) to understand later.
+### Testes Unitários
+```bash
+dotnet test
+```
 
-2. **Create a README**: Include a README file in your project that outlines how to set up and run the project.
+### Relatório de Cobertura
+```bash
+# Execute o script PowerShell para gerar relatório de cobertura
+./others/coverage.ps1
+```
 
-### Conclusion
+O relatório será gerado em `tests/coverage-report/index.html`
 
-This guide provides a general framework for creating a .NET project. You will need to adapt the steps based on the specific requirements outlined in your "TC NETT - Fase 1" document. If you have specific features or requirements from that document, feel free to share them, and I can provide more tailored guidance!
+## 🔧 Configurações Avançadas
+
+### JWT Settings
+```json
+{
+  "JwtSettings": {
+    "Issuer": "FiapCloudGames",
+    "Audience": "FiapCloudGamesUsers",
+    "ExpiryInMinutes": 60
+  }
+}
+```
+
+### Configurações de Ambiente
+
+- **Development**: `appsettings.Development.json`
+- **Production**: `appsettings.Production.json`
+
+## 📊 Funcionalidades Principais
+
+### 🎮 Gerenciamento de Jogos
+- Cadastro de jogos com título, descrição e preço
+- Consulta de catálogo com filtros
+- Atualização de informações de jogos
+
+### 👨‍💻 Sistema de Usuários
+- Registro e autenticação com JWT
+- Perfis de usuário personalizáveis
+- Gerenciamento de sessões
+
+### 📚 Biblioteca Pessoal
+- Compra e adição de jogos à biblioteca
+- Visualização da coleção pessoal
+- Histórico de compras
+
+### 🏷️ Sistema de Promoções
+- Criação de ofertas especiais
+- Aplicação automática de descontos
+- Gestão de campanhas promocionais
+
+## 🔒 Segurança
+
+- **Autenticação JWT**: Tokens seguros para autenticação
+- **Autorização baseada em roles**: Controle de acesso granular
+- **Validação de dados**: Validações robustas em todas as camadas
+- **Middleware de tratamento de erros**: Respostas padronizadas e seguras
+
+## 📁 Estrutura de Pastas Detalhada
+
+```
+FiapCloudGames/
+├── src/
+│   ├── FiapCloudGames.Api/
+│   │   ├── Controllers/         # Controladores da API
+│   │   ├── Middlewares/         # Middlewares customizados
+│   │   ├── Properties/          # Configurações de launch
+│   │   └── Request/             # DTOs de requisição
+│   ├── FiapCloudGames.Application/
+│   │   └── Services/            # Serviços de aplicação
+│   ├── FiapCloudGames.Domain/
+│   │   ├── DTOs/                # Data Transfer Objects
+│   │   ├── Entities/            # Entidades do domínio
+│   │   ├── Enums/               # Enumerações
+│   │   ├── Interfaces/          # Contratos e interfaces
+│   │   └── Utils/               # Utilitários do domínio
+│   └── FiapCloudGames.Infrastructure/
+│       ├── Data/                # Contexto do Entity Framework
+│       ├── Migrations/          # Migrações do banco
+│       └── Repositories/        # Implementações dos repositórios
+├── tests/
+│   └── FiapCloudGames.Tests/    # Testes unitários
+└── others/
+    └── coverage.ps1            # Script de cobertura de testes
+```
+
+
+## 👥 Equipe
+
+- **Desenvolvedor Principal**: [@deiserech](https://github.com/deiserech)
+- **Instituição**: FIAP - Faculdade de Informática e Administração Paulista
+
+## 📞 Contato
+
+- **Email**: rech.deise@gmail.com
+- **GitHub**: [FiapCloudGames](https://github.com/deiserech/FiapCloudGames)
+
+---
