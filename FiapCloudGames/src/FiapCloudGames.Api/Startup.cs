@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using FiapCloudGames.Api.Middlewares;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Domain.Interfaces.Repositories;
@@ -23,7 +24,11 @@ namespace FiapCloudGames.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
@@ -41,7 +46,10 @@ namespace FiapCloudGames.Api
 
                 var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+                if (File.Exists(xmlPath))
+                {
+                    c.IncludeXmlComments(xmlPath);
+                }
 
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
@@ -119,7 +127,7 @@ namespace FiapCloudGames.Api
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "FIAP Cloud Games API v1");
-                    c.RoutePrefix = string.Empty; 
+                    c.RoutePrefix = "swagger"; 
                     c.DisplayRequestDuration();
                     c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
                 });

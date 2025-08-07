@@ -19,9 +19,11 @@ namespace FiapCloudGames.Domain.Entities
         [Range(0.01, 1000.00)]
         public decimal? DiscountAmount { get; set; }
 
+        [Required]
         [DataType(DataType.DateTime)]
         public DateTime StartDate { get; set; }
 
+        [Required]
         [DataType(DataType.DateTime)]
         public DateTime EndDate { get; set; }
 
