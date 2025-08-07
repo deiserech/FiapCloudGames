@@ -1,11 +1,8 @@
 using System.Security.Claims;
-using FiapCloudGames.Application.Services;
-using FiapCloudGames.Domain.Entities;
+using FiapCloudGames.Domain.DTOs;
+using FiapCloudGames.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using FiapCloudGames.Domain.Interfaces.Services;
-using System.Threading.Tasks;
 
 namespace FiapCloudGames.Api.Controllers
 {
@@ -40,7 +37,7 @@ namespace FiapCloudGames.Api.Controllers
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _service.GetByIdAsync(id);
-            if (user == null) 
+            if (user == null)
                 return NotFound();
 
             return Ok(new
@@ -65,11 +62,10 @@ namespace FiapCloudGames.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetProfile()
         {
-            //TODO: validar
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            var user = await  _service.GetByIdAsync(int.Parse(userId));
+            var user = await _service.GetByIdAsync(int.Parse(userId));
             if (user == null) return NotFound();
 
             return Ok(new
@@ -84,7 +80,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <summary>
         /// Cria um novo usuário
         /// </summary>
-        /// <param name="user">Dados do usuário a ser criado</param>
+        /// <param name="userDto">Dados do usuário a ser criado</param>
         /// <returns>Usuário criado</returns>
         /// <response code="201">Usuário criado com sucesso</response>
         /// <response code="400">Dados inválidos</response>
@@ -92,12 +88,9 @@ namespace FiapCloudGames.Api.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateUser([FromBody] User user)
+        public async Task<IActionResult> CreateUser([FromBody] RegisterDto userDto)
         {
-            if (user == null)
-                return BadRequest("User data is required");
-
-            await _service.CreateUserAsync(user);
+            var user = await _service.CreateUserAsync(userDto);
             return CreatedAtAction(nameof(CreateUser), new { id = user.Id }, new
             {
                 Id = user.Id,

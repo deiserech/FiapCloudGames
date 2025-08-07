@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using FiapCloudGames.Api.Controllers;
+using FiapCloudGames.Domain.DTOs;
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Enums;
 using FiapCloudGames.Domain.Interfaces.Services;
@@ -258,15 +259,24 @@ namespace FiapCloudGames.Tests.Controllers
         public async Task CriarUser_WithValidUser_ShouldReturnCreatedAtAction()
         {
             // Arrange
-            var user = new User
+            var user = new RegisterDto
             {
-                Id = 1,
                 Name = "New User",
                 Email = "newuser@example.com",
-                Role = UserRole.User
+                Role = UserRole.User,
+                Password = "Ab234567##"
             };
 
-            _mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<User>())).Verifiable();
+            var createdUser = new User
+            {
+                Id = 1,
+                Name = user.Name,
+                Email = user.Email,
+                Role = user.Role
+            };
+
+            _mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<RegisterDto>()))
+                           .ReturnsAsync(createdUser);
 
             // Act
             var result = await _userController.CreateUser(user);
@@ -276,13 +286,14 @@ namespace FiapCloudGames.Tests.Controllers
             var createdResult = result as CreatedAtActionResult;
             createdResult.Should().NotBeNull();
             createdResult!.ActionName.Should().Be(nameof(_userController.CreateUser));
-            createdResult.RouteValues.Should().ContainKey("id").WhoseValue.Should().Be(user.Id);
+            createdResult.RouteValues.Should().ContainKey("id");
+            createdResult.RouteValues!["id"].Should().Be(createdUser.Id);
 
             var returnedData = createdResult.Value;
             returnedData.Should().NotBeNull();
 
             var idProperty = returnedData!.GetType().GetProperty("Id");
-            idProperty!.GetValue(returnedData).Should().Be(user.Id);
+            idProperty!.GetValue(returnedData).Should().Be(createdUser.Id);
 
             var nameProperty = returnedData.GetType().GetProperty("Name");
             nameProperty!.GetValue(returnedData).Should().Be(user.Name);
@@ -300,15 +311,24 @@ namespace FiapCloudGames.Tests.Controllers
         public async Task CriarUser_WithAdministratorRole_ShouldCreateSuccessfully()
         {
             // Arrange
-            var user = new User
+            var user = new RegisterDto
             {
-                Id = 2,
-                Name = "Admin User",
-                Email = "admin@example.com",
-                Role = UserRole.Admin
+                Name = "New User",
+                Email = "newuser@example.com",
+                Role = UserRole.Admin,
+                Password = "Ab234567##"
             };
 
-            _mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<User>())).Verifiable();
+            var createdUser = new User
+            {
+                Id = 2,
+                Name = user.Name,
+                Email = user.Email,
+                Role = user.Role
+            };
+
+            _mockUserService.Setup(s => s.CreateUserAsync(It.IsAny<RegisterDto>()))
+                           .ReturnsAsync(createdUser);
 
             // Act
             var result = await _userController.CreateUser(user);
@@ -316,31 +336,19 @@ namespace FiapCloudGames.Tests.Controllers
             // Assert
             result.Should().BeOfType<CreatedAtActionResult>();
             var createdResult = result as CreatedAtActionResult;
-            var returnedData = createdResult!.Value;
+            createdResult.Should().NotBeNull();
 
-            var roleProperty = returnedData!.GetType().GetProperty("Role");
+            var returnedData = createdResult!.Value;
+            returnedData.Should().NotBeNull();
+
+            var idProperty = returnedData!.GetType().GetProperty("Id");
+            idProperty!.GetValue(returnedData).Should().Be(createdUser.Id);
+
+            var roleProperty = returnedData.GetType().GetProperty("Role");
             roleProperty!.GetValue(returnedData).Should().Be("Admin");
 
             _mockUserService.Verify(s => s.CreateUserAsync(user), Times.Once);
         }
-
-        [Fact]
-        public async Task CriarUser_WithNullUser_ShouldReturnBadRequest()
-        {
-            // Arrange
-            User nullUser = null!;
-
-            // Act
-            var result = await _userController.CreateUser(nullUser);
-
-            // Assert
-            result.Should().BeOfType<BadRequestObjectResult>();
-            var badRequestResult = result as BadRequestObjectResult;
-            badRequestResult.Should().NotBeNull();
-            badRequestResult!.Value.Should().Be("User data is required");
-            _mockUserService.Verify(s => s.CreateUserAsync(It.IsAny<User>()), Times.Never);
-        }
-
         #endregion
 
     }

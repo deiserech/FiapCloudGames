@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace FiapCloudGames.Domain.Entities
 {
@@ -14,7 +15,10 @@ namespace FiapCloudGames.Domain.Entities
         [Range(1, int.MaxValue, ErrorMessage = "O ID do jogo deve ser um número positivo.")]
         public int GameId { get; set; }
 
+        [JsonIgnore]
         public User User { get; set; } = null!;
+
+        [JsonIgnore]
         public Game Game { get; set; } = null!;
     }
 }

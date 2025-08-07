@@ -28,6 +28,7 @@ namespace FiapCloudGames.Api
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 });
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
@@ -79,7 +80,6 @@ namespace FiapCloudGames.Api
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            // JWT Configuration
             var jwtSettings = Configuration.GetSection("JwtSettings");
             var secretKey = jwtSettings["SecretKey"];
 
@@ -107,15 +107,15 @@ namespace FiapCloudGames.Api
                 };
             });
 
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IGameRepository, GameRepository>();
-            services.AddScoped<IPromotionRepository, PromotionRepository>();
+            services.AddScoped<IGameService, GameService>();
             services.AddScoped<ILibraryRepository, LibraryRepository>();
-            services.AddScoped<UserService>();
-            services.AddScoped<GameService>();
-            services.AddScoped<AuthService>();
-            services.AddScoped<IPromotionService, PromotionService>();
             services.AddScoped<ILibraryService, LibraryService>();
+            services.AddScoped<IPromotionRepository, PromotionRepository>();
+            services.AddScoped<IPromotionService, PromotionService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -127,7 +127,7 @@ namespace FiapCloudGames.Api
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "FIAP Cloud Games API v1");
-                    c.RoutePrefix = "swagger"; 
+                    c.RoutePrefix = "swagger";
                     c.DisplayRequestDuration();
                     c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
                 });

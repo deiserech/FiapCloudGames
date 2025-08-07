@@ -1,3 +1,4 @@
+using FiapCloudGames.Domain.DTOs;
 using FiapCloudGames.Domain.Entities;
 
 namespace FiapCloudGames.Domain.Interfaces.Services
@@ -5,6 +6,6 @@ namespace FiapCloudGames.Domain.Interfaces.Services
     public interface IUserService
     {
         Task<User?> GetByIdAsync(int id);
-        Task CreateUserAsync(User user);
+        Task<User> CreateUserAsync(RegisterDto user);
     }
 }

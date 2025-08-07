@@ -33,7 +33,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="401">Não autorizado</response>
         /// <response code="403">Acesso negado - apenas administradores</response>
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(Game), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

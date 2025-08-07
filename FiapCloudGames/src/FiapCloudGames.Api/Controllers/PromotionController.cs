@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 using FiapCloudGames.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
 using FiapCloudGames.Domain.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FiapCloudGames.Api.Controllers
 {
@@ -127,6 +127,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="400">Dados inválidos ou erro na validação</response>
         /// <response code="500">Erro interno do servidor</response>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(Promotion), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -162,6 +163,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="400">Dados inválidos ou ID não confere</response>
         /// <response code="500">Erro interno do servidor</response>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(Promotion), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -201,6 +203,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="404">Promoção não encontrada</response>
         /// <response code="500">Erro interno do servidor</response>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Api.Request;
+using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FiapCloudGames.Api.Controllers
 {
@@ -95,6 +95,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="401">Não autorizado</response>
         /// <response code="500">Erro interno do servidor</response>
         [HttpPost("purchase")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(Library), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -110,8 +111,8 @@ namespace FiapCloudGames.Api.Controllers
                 }
 
                 var purchase = await _libraryService.PurchaseGameAsync(
-                    request.UserId, 
-                    request.GameId, 
+                    request.UserId,
+                    request.GameId,
                     request.PurchasePrice,
                     request.IsGift,
                     request.GiftMessage);
@@ -132,5 +133,5 @@ namespace FiapCloudGames.Api.Controllers
             }
         }
     }
-    
+
 }

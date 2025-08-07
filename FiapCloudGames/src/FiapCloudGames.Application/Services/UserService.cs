@@ -1,7 +1,7 @@
+using FiapCloudGames.Domain.DTOs;
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Interfaces.Repositories;
 using FiapCloudGames.Domain.Interfaces.Services;
-using System;
 
 namespace FiapCloudGames.Application.Services
 {
@@ -16,6 +16,18 @@ namespace FiapCloudGames.Application.Services
 
         public async Task<User?> GetByIdAsync(int id) => await _repo.GetByIdAsync(id);
 
-        public async Task CreateUserAsync(User user) => await _repo.CreateAsync(user);
+        public async Task<User> CreateUserAsync(RegisterDto registerDto)
+        {
+            var user = new User
+            {
+                Name = registerDto.Name,
+                Email = registerDto.Email,
+                Role = registerDto.Role
+            };
+
+            user.SetPassword(registerDto.Password);
+
+            return await _repo.CreateAsync(user);
+        }
     }
 }

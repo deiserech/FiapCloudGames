@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace FiapCloudGames.Domain.Entities
 {
@@ -31,6 +32,7 @@ namespace FiapCloudGames.Domain.Entities
 
         public int GameId { get; set; }
 
+        [JsonIgnore]
         public Game Game { get; set; } = null!;
 
         public bool IsValidPromotion()
