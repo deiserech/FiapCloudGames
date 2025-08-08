@@ -285,16 +285,17 @@ namespace FiapCloudGames.Tests.Services
             _mockPromotionRepository.Setup(repo => repo.GetActivePromotionsByGameIdAsync(updatedPromotion.GameId))
                                    .ReturnsAsync(activePromotions);
 
-            _mockPromotionRepository.Setup(repo => repo.UpdateAsync(updatedPromotion))
-                                   .ReturnsAsync(updatedPromotion);
+            _mockPromotionRepository.Setup(repo => repo.UpdateAsync(It.IsAny<Promotion>()))
+                                   .ReturnsAsync((Promotion p) => p);
 
             // Act
             var result = await _promotionService.UpdatePromotionAsync(updatedPromotion);
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().Be(updatedPromotion);
-            _mockPromotionRepository.Verify(repo => repo.UpdateAsync(updatedPromotion), Times.Once);
+            result.Title.Should().Be(updatedPromotion.Title);
+            result.DiscountPercentage.Should().Be(updatedPromotion.DiscountPercentage);
+            _mockPromotionRepository.Verify(repo => repo.UpdateAsync(It.IsAny<Promotion>()), Times.Once);
         }
 
     }

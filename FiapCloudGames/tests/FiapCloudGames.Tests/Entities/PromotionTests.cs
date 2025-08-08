@@ -78,6 +78,13 @@ namespace FiapCloudGames.Tests.Entities
         public void CalculateDiscountedPrice_ShouldApplyPercentageDiscount_WhenPromotionIsValid()
         {
             // Arrange
+            var game = new Game
+            {
+                Id = 1,
+                Title = "Test Game",
+                Price = 100m
+            };
+
            var promotion = new Promotion
             {
                 Id = 1,
@@ -87,7 +94,8 @@ namespace FiapCloudGames.Tests.Entities
                 StartDate = DateTime.UtcNow.AddDays(-1),
                 EndDate = DateTime.UtcNow.AddDays(7),
                 IsActive = true,
-                GameId = 1
+                GameId = 1,
+                Game = game
             };
 
             // Act
@@ -101,6 +109,13 @@ namespace FiapCloudGames.Tests.Entities
         public void CalculateDiscountedPrice_ShouldApplyFixedDiscount_WhenDiscountAmountIsSpecified()
         {
             // Arrange
+            var game = new Game
+            {
+                Id = 1,
+                Title = "Test Game",
+                Price = 100m
+            };
+
             var promotion = new Promotion
             {
                 Id = 1,
@@ -111,7 +126,8 @@ namespace FiapCloudGames.Tests.Entities
                 StartDate = DateTime.UtcNow.AddDays(-1),
                 EndDate = DateTime.UtcNow.AddDays(7),
                 IsActive = true,
-                GameId = 1
+                GameId = 1,
+                Game = game
             };
 
             // Act
@@ -126,6 +142,13 @@ namespace FiapCloudGames.Tests.Entities
         {
             // Arrange
             var originalPrice = 100m;
+            var game = new Game
+            {
+                Id = 1,
+                Title = "Test Game",
+                Price = originalPrice
+            };
+
             var promotion = new Promotion
             {
                 Id = 1,
@@ -135,7 +158,8 @@ namespace FiapCloudGames.Tests.Entities
                 StartDate = DateTime.UtcNow.AddDays(-10),
                 EndDate = DateTime.UtcNow.AddDays(-1),
                 IsActive = true,
-                GameId = 1
+                GameId = 1,
+                Game = game
             };
 
             // Act
@@ -149,6 +173,13 @@ namespace FiapCloudGames.Tests.Entities
         public void CalculateDiscountedPrice_ShouldNotGoBelowZero_WhenDiscountIsLargerThanPrice()
         {
             // Arrange
+            var game = new Game
+            {
+                Id = 1,
+                Title = "Test Game",
+                Price = 10m // Preço menor que o desconto
+            };
+
             var promotion = new Promotion
             {
                 Id = 1,
@@ -158,7 +189,8 @@ namespace FiapCloudGames.Tests.Entities
                 StartDate = DateTime.UtcNow.AddDays(-1),
                 EndDate = DateTime.UtcNow.AddDays(7),
                 IsActive = true,
-                GameId = 1
+                GameId = 1,
+                Game = game
             };
 
             // Act
