@@ -114,10 +114,7 @@ namespace FiapCloudGames.Api.Controllers
 
                 var purchase = await _libraryService.PurchaseGameAsync(
                     request.UserId,
-                    request.GameId,
-                    request.PurchasePrice,
-                    request.IsGift,
-                    request.GiftMessage);
+                    request.GameId);
 
                 return CreatedAtAction(nameof(GetLibraryEntry), new { id = purchase.Id }, purchase);
             }

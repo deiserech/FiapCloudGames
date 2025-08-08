@@ -100,7 +100,6 @@ namespace FiapCloudGames.Api.Controllers
         /// Calcula o preço com desconto para um jogo específico
         /// </summary>
         /// <param name="gameId">ID do jogo</param>
-        /// <param name="originalPrice">Preço original do jogo</param>
         /// <returns>Preço original e preço com desconto aplicado</returns>
         /// <response code="200">Retorna o preço com desconto calculado</response>
         /// <response code="400">Erro na solicitação</response>
@@ -108,12 +107,12 @@ namespace FiapCloudGames.Api.Controllers
         [Authorize(Roles = "Admin, User")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<decimal>> GetDiscountedPrice(int gameId, [FromQuery] decimal originalPrice)
+        public async Task<ActionResult<decimal>> GetDiscountedPrice(int gameId)
         {
             try
             {
-                var discountedPrice = await _promotionService.GetDiscountedPriceAsync(gameId, originalPrice);
-                return Ok(new { OriginalPrice = originalPrice, DiscountedPrice = discountedPrice });
+                var discountedPrice = await _promotionService.GetDiscountedPriceAsync(gameId);
+                return Ok(new {DiscountedPrice = discountedPrice });
             }
             catch (Exception ex)
             {

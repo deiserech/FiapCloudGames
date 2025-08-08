@@ -10,7 +10,7 @@ namespace FiapCloudGames.Domain.Interfaces.Services
         Task<Promotion> CreatePromotionAsync(Promotion promotion);
         Task<Promotion> UpdatePromotionAsync(Promotion promotion);
         Task DeletePromotionAsync(int id);
-        Task<decimal> GetDiscountedPriceAsync(int gameId, decimal originalPrice);
+        Task<decimal> GetDiscountedPriceAsync(int gameId);
         Task<Promotion?> GetBestPromotionForGameAsync(int gameId);
     }
 }

@@ -41,18 +41,18 @@ namespace FiapCloudGames.Domain.Entities
             return IsActive && now >= StartDate && now <= EndDate;
         }
 
-        public decimal CalculateDiscountedPrice(decimal originalPrice)
+        public decimal CalculateDiscountedPrice()
         {
             if (!IsValidPromotion())
-                return originalPrice;
+                return Game!.Price;
 
             if (DiscountAmount.HasValue)
             {
-                return Math.Max(0, originalPrice - DiscountAmount.Value);
+                return Math.Max(0, Game!.Price - DiscountAmount.Value);
             }
 
-            var discountValue = originalPrice * (DiscountPercentage / 100);
-            return Math.Max(0, originalPrice - discountValue!.Value);
+            var discountValue = Game!.Price * (DiscountPercentage / 100);
+            return Math.Max(0, Game.Price - discountValue!.Value);
         }
     }
 }

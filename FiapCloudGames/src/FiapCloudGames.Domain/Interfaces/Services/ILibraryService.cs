@@ -6,7 +6,7 @@ namespace FiapCloudGames.Domain.Interfaces.Services
     {
         Task<IEnumerable<Library>> GetUserLibraryAsync(int userId);
         Task<Library?> GetLibraryEntryAsync(int id);
-        Task<Library> PurchaseGameAsync(int userId, int gameId, decimal purchasePrice, bool isGift = false, string? giftMessage = null);
+        Task<Library> PurchaseGameAsync(int userId, int gameId);
         Task<bool> UserOwnsGameAsync(int userId, int gameId);
     }
 }

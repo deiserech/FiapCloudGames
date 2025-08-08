@@ -102,15 +102,12 @@ namespace FiapCloudGames.Application.Services
             await _promotionRepository.DeleteAsync(id);
         }
 
-        public async Task<decimal> GetDiscountedPriceAsync(int gameId, decimal originalPrice)
+        public async Task<decimal> GetDiscountedPriceAsync(int gameId)
         {
             var bestPromotion = await GetBestPromotionForGameAsync(gameId);
-            if (bestPromotion == null)
-            {
-                return originalPrice;
-            }
 
-            return bestPromotion.CalculateDiscountedPrice(originalPrice);
+
+            return bestPromotion?.CalculateDiscountedPrice()??0;
         }
 
         public async Task<Promotion?> GetBestPromotionForGameAsync(int gameId)
@@ -131,7 +128,7 @@ namespace FiapCloudGames.Application.Services
             var originalPrice = game.Price;
 
             return activePromotions
-                .OrderBy(p => p.CalculateDiscountedPrice(originalPrice))
+                .OrderBy(p => p.CalculateDiscountedPrice())
                 .FirstOrDefault();
         }
 

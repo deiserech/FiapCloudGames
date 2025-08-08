@@ -78,8 +78,7 @@ namespace FiapCloudGames.Tests.Entities
         public void CalculateDiscountedPrice_ShouldApplyPercentageDiscount_WhenPromotionIsValid()
         {
             // Arrange
-            var originalPrice = 100m;
-            var promotion = new Promotion
+           var promotion = new Promotion
             {
                 Id = 1,
                 Title = "Desconto de 20%",
@@ -92,7 +91,7 @@ namespace FiapCloudGames.Tests.Entities
             };
 
             // Act
-            var discountedPrice = promotion.CalculateDiscountedPrice(originalPrice);
+            var discountedPrice = promotion.CalculateDiscountedPrice();
 
             // Assert
             Assert.Equal(80m, discountedPrice);
@@ -102,7 +101,6 @@ namespace FiapCloudGames.Tests.Entities
         public void CalculateDiscountedPrice_ShouldApplyFixedDiscount_WhenDiscountAmountIsSpecified()
         {
             // Arrange
-            var originalPrice = 100m;
             var promotion = new Promotion
             {
                 Id = 1,
@@ -117,7 +115,7 @@ namespace FiapCloudGames.Tests.Entities
             };
 
             // Act
-            var discountedPrice = promotion.CalculateDiscountedPrice(originalPrice);
+            var discountedPrice = promotion?.CalculateDiscountedPrice() ?? 0;
 
             // Assert
             Assert.Equal(85m, discountedPrice);
@@ -141,7 +139,7 @@ namespace FiapCloudGames.Tests.Entities
             };
 
             // Act
-            var discountedPrice = promotion.CalculateDiscountedPrice(originalPrice);
+            var discountedPrice = promotion?.CalculateDiscountedPrice() ?? 0;
 
             // Assert
             Assert.Equal(originalPrice, discountedPrice);
@@ -151,7 +149,6 @@ namespace FiapCloudGames.Tests.Entities
         public void CalculateDiscountedPrice_ShouldNotGoBelowZero_WhenDiscountIsLargerThanPrice()
         {
             // Arrange
-            var originalPrice = 10m;
             var promotion = new Promotion
             {
                 Id = 1,
@@ -165,7 +162,7 @@ namespace FiapCloudGames.Tests.Entities
             };
 
             // Act
-            var discountedPrice = promotion.CalculateDiscountedPrice(originalPrice);
+            var discountedPrice = promotion?.CalculateDiscountedPrice() ?? 0;
 
             // Assert
             Assert.Equal(0m, discountedPrice);

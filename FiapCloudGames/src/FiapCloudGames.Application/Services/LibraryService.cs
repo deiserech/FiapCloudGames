@@ -38,27 +38,22 @@ namespace FiapCloudGames.Application.Services
             return await _libraryRepository.GetByIdAsync(id);
         }
 
-        public async Task<Library> PurchaseGameAsync(int userId, int gameId, decimal purchasePrice, bool isGift = false, string? giftMessage = null)
+        public async Task<Library> PurchaseGameAsync(int userId, int gameId)
         {
             if (!await _userRepository.ExistsAsync(userId))
-            {
                 throw new ArgumentException("Usuário não encontrado.");
-            }
 
-            if (!await _gameRepository.ExistsAsync(gameId))
-            {
+            var game = await _gameRepository.GetByIdAsync(gameId);
+            if (game == null)
                 throw new ArgumentException("Jogo não encontrado.");
-            }
 
             if (await UserOwnsGameAsync(userId, gameId))
-            {
                 throw new InvalidOperationException("Usuário já possui este jogo em sua biblioteca.");
-            }
 
-            if (purchasePrice <= 0)
-            {
+            var finalPrice = await _promotionService.GetDiscountedPriceAsync(gameId);
+
+            if (finalPrice <= 0)
                 throw new ArgumentException("Preço de compra deve ser maior que zero.");
-            }
 
             var library = new Library
             {
