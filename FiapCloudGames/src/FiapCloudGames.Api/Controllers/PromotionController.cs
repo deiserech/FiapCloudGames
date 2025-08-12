@@ -81,6 +81,7 @@ namespace FiapCloudGames.Api.Controllers
         /// <response code="200">Retorna a lista de promoções ativas do jogo</response>
         /// <response code="400">Erro na solicitação</response>
         [HttpGet("game/{gameId}/active")]
+        [Authorize(Roles = "Admin, User")]
         [ProducesResponseType(typeof(IEnumerable<Promotion>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<Promotion>>> GetActivePromotionsByGame(int gameId)

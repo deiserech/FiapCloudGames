@@ -43,16 +43,13 @@ namespace FiapCloudGames.Infrastructure
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             
-            // Retorna o usuário com as entidades relacionadas incluídas
             return await GetByIdAsync(user.Id) ?? user;
         }
 
         public async Task<User> UpdateAsync(User user)
         {
-            _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             
-            // Retorna o usuário atualizado com as entidades relacionadas incluídas
             return await GetByIdAsync(user.Id) ?? user;
         }
 

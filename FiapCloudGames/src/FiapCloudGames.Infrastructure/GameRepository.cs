@@ -40,7 +40,6 @@ namespace FiapCloudGames.Infrastructure.Repositories
 
         public async Task<Game> UpdateAsync(Game game)
         {
-            _context.Entry(game).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return await GetByIdAsync(game.Id) ?? game;

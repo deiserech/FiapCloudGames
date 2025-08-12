@@ -45,7 +45,6 @@ namespace FiapCloudGames.Infrastructure
             _context.Promotions.Add(promotion);
             await _context.SaveChangesAsync();
             
-            // Retorna a promoção com o Game incluído
             return await GetByIdAsync(promotion.Id) ?? promotion;
         }
 
@@ -54,7 +53,6 @@ namespace FiapCloudGames.Infrastructure
             _context.Entry(promotion).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             
-            // Retorna a promoção atualizada com o Game incluído
             return await GetByIdAsync(promotion.Id) ?? promotion;
         }
 

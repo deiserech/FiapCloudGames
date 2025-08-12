@@ -25,16 +25,7 @@ namespace FiapCloudGames.Api.Request
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "O preço deve ser maior que zero")]
         public decimal PurchasePrice { get; set; }
-        
-        /// <summary>
-        /// Indica se a compra é um presente
-        /// </summary>
-        public bool IsGift { get; set; } = false;
-        
-        /// <summary>
-        /// Mensagem do presente (opcional)
-        /// </summary>
-        public string? GiftMessage { get; set; }
+
     }
     
 }
